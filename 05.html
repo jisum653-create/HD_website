@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>통합 보고서: 1979 부마의 불꽃 vs 2025 청년의 얼음</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base Settings */
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fafaf9; /* stone-50 */
+            color: #292524; /* stone-800 */
+        }
+        h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
+
+        /* Components */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background-color: #fff;
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+        }
+
+        /* Animations */
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Nav Link Style */
+        .nav-link {
+            position: relative;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        /* Analysis Cards */
+        .analysis-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .analysis-card:hover {
+            border-left-color: #ea580c;
+            background-color: #fff7ed;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-orange-200 selection:text-orange-900">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 glass-panel">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Left: Home & Title -->
+                <div class="flex-shrink-0 flex items-center">
+                    <!-- Home Icon -->
+                    <a href="index.html" class="mr-4 p-2 rounded-full hover:bg-stone-100 text-stone-500 hover:text-orange-700 transition-colors group" title="메인으로 이동">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                    </a>
+                    <span class="serif text-lg font-bold text-stone-800 border-l pl-4 border-stone-300 hidden md:block">
+                        통합 보고서: <span class="text-orange-700">1979 부마 vs 2025 청년</span>
+                    </span>
+                </div>
+
+                <!-- Right: Nav Links -->
+                <div class="hidden sm:flex space-x-8 text-sm font-medium text-stone-600">
+                    <a href="#comparison" class="nav-link hover:text-orange-700">시대 비교</a>
+                    <a href="#analysis" class="nav-link hover:text-orange-700">데이터 분석</a>
+                    <a href="#strategy" class="nav-link hover:text-orange-700">새로운 전략</a>
+                    <a href="#roadmap" class="nav-link hover:text-orange-700">미래 제언</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="sm:hidden text-stone-600 hover:text-orange-800">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 border-t border-stone-100 p-4 space-y-2 absolute w-full shadow-lg z-40">
+            <a href="#comparison" class="block py-2 text-stone-600 font-medium">시대 비교</a>
+            <a href="#analysis" class="block py-2 text-stone-600 font-medium">데이터 분석</a>
+            <a href="#strategy" class="block py-2 text-stone-600 font-medium">새로운 전략</a>
+            <a href="#roadmap" class="block py-2 text-stone-600 font-medium">미래 제언</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section (Reverted to Subtle Dark Gradient) -->
+    <header class="relative py-28 px-4 overflow-hidden bg-gradient-to-br from-stone-950 via-stone-900 to-stone-800 text-white">
+        <!-- Abstract Background Effects -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
+             <!-- Adjusted blur elements for dark mode visibility -->
+             <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-orange-900 rounded-full blur-[100px] animate-pulse opacity-40"></div>
+             <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-stone-700 rounded-full blur-[120px] opacity-20" style="animation-delay: 1s;"></div>
+        </div>
+
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <div class="inline-block px-4 py-1.5 mb-6 border border-white/20 rounded-full text-xs font-bold tracking-widest text-stone-300 uppercase bg-white/5 backdrop-blur-sm animate-fade-in-up">
+                통합보고서 2026
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in-up delay-100 text-shadow-sm">
+                <span class="text-orange-500">1979 불꽃</span>에서<br>
+                <span class="text-stone-300">2025 얼음</span>으로
+            </h1>
+            <p class="mt-6 text-xl text-stone-400 max-w-2xl mx-auto serif font-light leading-relaxed animate-fade-in-up delay-200">
+                46년의 시차, 두 청년 세대의 열정을 통섭하여<br>
+                새로운 미래 전략을 도출합니다.
+            </p>
+            
+            <div class="mt-12 flex justify-center gap-4 animate-fade-in-up delay-300">
+                <a href="#analysis" class="px-8 py-3.5 rounded-full bg-white text-stone-900 font-bold hover:bg-orange-50 transition-all duration-300 shadow-lg transform hover:-translate-y-1">
+                    데이터 분석 보기 ↓
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: Comparison Cards -->
+    <section id="comparison" class="py-24 bg-stone-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-orange-600 font-bold tracking-widest text-xs uppercase mb-2 block">Key Keywords</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-900 mb-4 serif">1. 시대의 결핍이 만든 열정의 형태</h2>
+                <p class="text-stone-500 max-w-2xl mx-auto">
+                    두 시대 청년들의 열정은 본질적으로 같으나, 그 표현 방식은 정반대의 키워드로 나타납니다.
+                </p>
+            </div>
+
+            <div class="flex justify-center mb-12">
+                <div class="bg-white p-1.5 rounded-full shadow-sm border border-stone-200 inline-flex">
+                    <button onclick="toggleEra('1979')" id="btn-1979" class="px-6 py-2 rounded-full text-sm font-bold transition-all bg-orange-600 text-white shadow-md">1979 부마세대</button>
+                    <button onclick="toggleEra('2025')" id="btn-2025" class="px-6 py-2 rounded-full text-sm font-bold text-stone-500 hover:text-stone-900 transition-all">2025 MZ/Alpha</button>
+                </div>
+            </div>
+
+            <div id="comparison-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Content injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Data Analysis & Visualization (Sticky Bug Fixed) -->
+    <section id="analysis" class="py-24 bg-white border-t border-stone-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-orange-600 font-bold tracking-widest text-xs uppercase mb-2 block">Data Analytics</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-900 mb-4 serif">2. 데이터로 본 열정의 실체</h2>
+                <p class="text-stone-500 max-w-2xl mx-auto">
+                    예상과 실제 데이터의 불일치를 분석하여, 표면적인 현상 이면의 본질을 파악했습니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <!-- Left: Sentiment Chart (Fixed Sticky Behavior) -->
+                <!-- Added 'lg:sticky lg:top-28' to stick ONLY on large screens. Removed 'sticky top-24' which caused mobile overlap. -->
+                <div class="lg:col-span-4 bg-stone-50 rounded-2xl p-8 border border-stone-200 shadow-sm h-fit lg:sticky lg:top-28 z-20">
+                    <div class="mb-6 border-b border-stone-200 pb-4">
+                        <h3 class="text-xl font-bold text-stone-800 serif">감정 분석 비교</h3>
+                        <p class="text-sm text-stone-500 mt-1">1979년(희망) vs 2025년(불안)</p>
+                    </div>
+                    <div class="chart-container bg-white mb-4" style="height: 250px;">
+                        <canvas id="sentimentChart"></canvas>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-stone-100 text-sm text-stone-600">
+                        <p class="mb-2"><strong class="text-orange-600">1979:</strong> 투쟁 속 긍정/중립(54%)</p>
+                        <p><strong class="text-slate-600">2025:</strong> 일상 속 부정(96%)</p>
+                    </div>
+                </div>
+
+                <!-- Right: Detailed Analysis Grid -->
+                <div class="lg:col-span-8 space-y-8 relative z-10">
+                    
+                    <!-- 1979 Analysis -->
+                    <div class="group relative bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500">
+                        <div class="bg-orange-50 px-6 py-4 border-b border-orange-100 flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-orange-900">1979 부마민주항쟁: 파괴가 아닌 연대</h3>
+                            <span class="px-2 py-1 bg-white text-orange-600 text-xs font-bold rounded shadow-sm">Text Mining</span>
+                        </div>
+                        <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                            <!-- Prediction -->
+                            <div class="analysis-card p-5 rounded-xl bg-stone-50 transition-opacity duration-300 group-hover:opacity-60 hover:!opacity-100">
+                                <span class="text-xs font-bold text-stone-400 uppercase tracking-wide block mb-2">예상 (Hypothesis)</span>
+                                <h4 class="font-bold text-stone-800 mb-1">부정 감정 우세</h4>
+                                <p class="text-sm text-stone-600 leading-snug">사회 불만, 투쟁, 고발 등 파괴적 키워드 중심일 것.</p>
+                            </div>
+                            <!-- Result -->
+                            <div class="analysis-card p-5 rounded-xl bg-stone-50 transition-opacity duration-300 group-hover:opacity-60 hover:!opacity-100">
+                                <span class="text-xs font-bold text-orange-400 uppercase tracking-wide block mb-2">결과 (Result)</span>
+                                <h4 class="font-bold text-stone-800 mb-1">중립/긍정 우세</h4>
+                                <p class="text-sm text-stone-600 leading-snug">확신도 0.54로 중립 감정 1위. 연대, 결의 키워드 다수.</p>
+                            </div>
+                            <!-- Interpretation (Emphasized & Conclusive) -->
+                            <div class="analysis-card p-5 rounded-xl bg-teal-50/50 border-2 border-transparent group-hover:border-teal-500 group-hover:bg-white group-hover:shadow-lg group-hover:scale-105 transition-all duration-300 transform origin-center md:col-span-1 md:row-span-1">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="text-xs font-bold text-teal-600 uppercase tracking-wide">✨ 핵심 해석</span>
+                                    <span class="text-lg">💡</span>
+                                </div>
+                                <h4 class="font-bold text-stone-900 mb-2 text-lg">지성과 인간애의 발원</h4>
+                                <p class="text-sm text-stone-700 leading-relaxed font-medium">
+                                    나의 안위보다 공동체의 정의를 먼저 고민했던 <span class="bg-teal-100 px-1">건강한 지성</span>과 뜨거운 인간애의 발원지임을 인식하고, 부산대학교의 상생과 연대의 가치가 발현된 것으로 <strong>해석되었습니다.</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2025 Analysis -->
+                    <div class="group relative bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500">
+                        <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-slate-900">2025 현대 청년: 열정으로 포장된 생존</h3>
+                            <span class="px-2 py-1 bg-white text-slate-600 text-xs font-bold rounded shadow-sm">Text Mining</span>
+                        </div>
+                        <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                            <!-- Prediction -->
+                            <div class="analysis-card p-5 rounded-xl bg-stone-50 transition-opacity duration-300 group-hover:opacity-60 hover:!opacity-100">
+                                <span class="text-xs font-bold text-stone-400 uppercase tracking-wide block mb-2">예상 (Hypothesis)</span>
+                                <h4 class="font-bold text-stone-800 mb-1">긍정 감정 우세</h4>
+                                <p class="text-sm text-stone-600 leading-snug">자기계발, 성취, 스펙 등 성장 지향적 키워드 중심일 것.</p>
+                            </div>
+                            <!-- Result -->
+                            <div class="analysis-card p-5 rounded-xl bg-stone-50 transition-opacity duration-300 group-hover:opacity-60 hover:!opacity-100">
+                                <span class="text-xs font-bold text-orange-400 uppercase tracking-wide block mb-2">결과 (Result)</span>
+                                <h4 class="font-bold text-stone-800 mb-1">극단적 부정 편향</h4>
+                                <p class="text-sm text-stone-600 leading-snug">88개 중 85개 키워드가 부정(불안, 고립, 차단).</p>
+                            </div>
+                            <!-- Interpretation (Emphasized & Conclusive) -->
+                            <div class="analysis-card p-5 rounded-xl bg-red-50/50 border-2 border-transparent group-hover:border-red-400 group-hover:bg-white group-hover:shadow-lg group-hover:scale-105 transition-all duration-300 transform origin-center">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="text-xs font-bold text-red-600 uppercase tracking-wide">✨ 핵심 해석</span>
+                                    <span class="text-lg">🚨</span>
+                                </div>
+                                <h4 class="font-bold text-stone-900 mb-2 text-lg">각자도생의 훈련소?</h4>
+                                <p class="text-sm text-stone-700 leading-relaxed font-medium">
+                                    캠퍼스와 사회환경이 청년들에게 심리적 안전지대가 되어주지 못하고, 거대한 <span class="bg-red-100 px-1">'각자도생의 훈련소'</span>로 전락했음을 <strong>시사합니다.</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Significance -->
+                    <div class="bg-stone-900 text-white rounded-xl p-6 flex items-start gap-4">
+                        <span class="text-3xl">💡</span>
+                        <div>
+                            <h4 class="font-bold text-lg text-orange-400 mb-1">분석의 의의 (Significance)</h4>
+                            <p class="text-stone-300 text-sm leading-relaxed">
+                                직관적인 판단("요즘 청년은 개인주의적이다")의 위험성을 경계하고, 
+                                <strong>데이터 기반으로 내면의 불안을 입증</strong>했습니다. 
+                                이는 단순한 현상 파악을 넘어, '심리적 안전망' 구축이 시급함을 증명합니다.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Strategy & Action Plan -->
+    <section id="strategy" class="py-24 bg-stone-100 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-orange-200 rounded-full blur-[80px] opacity-40 pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <span class="text-teal-600 font-bold tracking-widest text-xs uppercase mb-2 block">New Strategy</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-900 mb-4 serif">3. 부마 정신과 생존감각의 결합</h2>
+                <p class="text-stone-500 max-w-2xl mx-auto">
+                    과거의 유산(연대)과 현재의 감각(생존)을 결합한 새로운 태도를 제안합니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Strategy Card 1 -->
+                <div class="group bg-white rounded-2xl p-8 border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300 card-hover">
+                    <div class="w-14 h-14 bg-teal-50 rounded-xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                        🤝
+                    </div>
+                    <h3 class="text-2xl font-bold text-stone-900 mb-3 serif">각자도생을 넘어 <br><span class="text-teal-600">'스마트한 연대'</span>로</h3>
+                    <p class="text-stone-600 leading-relaxed mb-6">
+                        효율성을 위해 관계를 '손절'하는 2025년 청년들에게 제안합니다. 1979년의 뜨거운 혈맹이 아니더라도, 서로의 생존 노하우를 공유하는 <strong>'느슨하지만 확실한 연대(Weak but Sure Ties)'</strong>가 필요합니다.
+                    </p>
+                    <div class="bg-stone-50 p-4 rounded-lg text-sm text-stone-500 border-l-4 border-teal-500">
+                        "나의 '갓생'이 타인의 성장을 방해하지 않는 실용적 공동체 의식"
+                    </div>
+                </div>
+
+                <!-- Strategy Card 2 -->
+                <div class="group bg-white rounded-2xl p-8 border border-stone-200 shadow-sm hover:shadow-xl transition-all duration-300 card-hover">
+                    <div class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                        ⚖️
+                    </div>
+                    <h3 class="text-2xl font-bold text-stone-900 mb-3 serif">'공정'의 감각을 <br><span class="text-indigo-600">'정의'의 차원</span>으로</h3>
+                    <p class="text-stone-600 leading-relaxed mb-6">
+                        내 밥그릇을 뺏는 '불공정'에 대한 분노를 넘어, 시스템 자체에 의문을 제기하는 거시적 안목이 필요합니다. 1979년 청년들이 '거악(독재)'에 맞섰던 것처럼 시야를 확장해야 합니다.
+                    </p>
+                    <div class="bg-stone-50 p-4 rounded-lg text-sm text-stone-500 border-l-4 border-indigo-500">
+                        "경쟁의 룰이 왜 가혹한지 묻는 것이 진정한 부산대 지성인의 자세"
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Roadmap -->
+    <section id="roadmap" class="py-24 bg-stone-900 text-white">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 serif">4. "열정의 방향을 내부에서 외부로"</h2>
+            <div class="w-16 h-1 bg-orange-500 mx-auto mb-10"></div>
+            
+            <p class="text-stone-300 text-lg leading-relaxed mb-16 font-light">
+                1979년의 청년이 '자유'를 위해 거리로 나섰다면,<br>
+                2025년의 청년은 '공정한 생존'을 위해 삶의 현장에서 치열하게 싸우고 있습니다.<br>
+                <strong class="text-white">이 두 열정은 본질적으로 같습니다.</strong><br>
+                국가와 대학은 이 치열함이 고립으로 끝나지 않도록 응답해야 합니다.
+            </p>
+
+            <!-- Roadmap Tabs -->
+            <div class="bg-stone-800 rounded-2xl p-2 inline-flex mb-12">
+                <button onclick="switchTab('national')" id="tab-national" class="px-6 py-2 rounded-xl text-sm font-bold bg-orange-600 text-white transition-all">국가적 제언</button>
+                <button onclick="switchTab('university')" id="tab-university" class="px-6 py-2 rounded-xl text-sm font-bold text-stone-400 hover:text-white transition-all">부산대학교 제언</button>
+            </div>
+
+            <!-- Roadmap Content -->
+            <div id="content-national" class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in-up">
+                <div class="bg-stone-800/50 p-6 rounded-xl border border-stone-700 hover:border-orange-500/50 transition-colors text-left">
+                    <div class="text-2xl mb-3">🛡️</div>
+                    <h4 class="font-bold text-lg mb-2 text-orange-400">실패 안전망 구축</h4>
+                    <p class="text-sm text-stone-400">패자부활전이 가능한 제도적 장치(재도전 지원금 등)를 마련하여 실패의 공포 완화.</p>
+                </div>
+                <div class="bg-stone-800/50 p-6 rounded-xl border border-stone-700 hover:border-orange-500/50 transition-colors text-left">
+                    <div class="text-2xl mb-3">🔍</div>
+                    <h4 class="font-bold text-lg mb-2 text-orange-400">공정성 투명화</h4>
+                    <p class="text-sm text-stone-400">채용/입시 과정의 불투명성 제거. "노력이 배신당하지 않는다"는 신뢰 회복.</p>
+                </div>
+                <div class="bg-stone-800/50 p-6 rounded-xl border border-stone-700 hover:border-orange-500/50 transition-colors text-left">
+                    <div class="text-2xl mb-3">🌍</div>
+                    <h4 class="font-bold text-lg mb-2 text-orange-400">사회적 효능감</h4>
+                    <p class="text-sm text-stone-400">지역 문제 해결(로컬 크리에이터) 경험 제공. 작은 성취가 사회를 변화시키는 경험.</p>
+                </div>
+            </div>
+
+            <div id="content-university" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in-up">
+                <div class="bg-stone-800/50 p-6 rounded-xl border border-stone-700 hover:border-teal-500/50 transition-colors text-left">
+                    <div class="text-2xl mb-3">🫂</div>
+                    <h4 class="font-bold text-lg mb-2 text-teal-400">경쟁자에서 동료로</h4>
+                    <p class="text-sm text-stone-400">경쟁에 지친 청년들이 서로를 '동료'로 인식할 수 있는 심리적 안전망과 커뮤니티 구축.</p>
+                </div>
+                <div class="bg-stone-800/50 p-6 rounded-xl border border-stone-700 hover:border-teal-500/50 transition-colors text-left">
+                    <div class="text-2xl mb-3">🔓</div>
+                    <h4 class="font-bold text-lg mb-2 text-teal-400">실패의 자유</h4>
+                    <p class="text-sm text-stone-400">실패해도 괜찮다는 문화 조성. 학점과 스펙 외의 다양한 도전이 장려되는 캠퍼스.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-950 py-12 border-t border-stone-900 text-center text-stone-600 text-sm">
+        <p class="mb-2">2026 통합 보고서 시각화 프로젝트</p>
+        <p class="font-serif text-stone-500">부산대학교 | 부마민주항쟁기념재단</p>
+    </footer>
+
+    <script>
+        // --- 1. Data Store & Logic for Comparison ---
+        const comparisonData = {
+            '1979': [
+                { icon: '💥', title: '에너지의 방향', value: '폭발 (Explosion)', desc: '사회 구조를 향해 밖으로 분출', theme: 'orange' },
+                { icon: '🔥', title: '행동의 동기', value: '희생 (Sacrifice)', desc: '대의를 위해 나를 태움', theme: 'orange' },
+                { icon: '🩸', title: '연대의 방식', value: '혈맹 (Blood Ties)', desc: '뜨겁고 끈끈한 운명 공동체', theme: 'orange' },
+                { icon: '👿', title: '저항의 대상', value: '거악 (Macro Evil)', desc: '독재, 억압적 체제 (정치)', theme: 'orange' }
+            ],
+            '2025': [
+                { icon: '❄️', title: '에너지의 방향', value: '응축 (Implosion)', desc: '내면의 생존과 스펙으로 수렴', theme: 'slate' },
+                { icon: '🛡️', title: '행동의 동기', value: '생존 (Survival)', desc: '살아남기 위해 나를 지킴', theme: 'slate' },
+                { icon: '🔌', title: '연대의 방식', value: '접속 (Connection)', desc: '필요에 따른 느슨한 연대', theme: 'slate' },
+                { icon: '📉', title: '저항의 대상', value: '불공정 (Unfairness)', desc: '불투명한 보상, 기회 박탈', theme: 'slate' }
+            ]
+        };
+
+        function toggleEra(era) {
+            const grid = document.getElementById('comparison-grid');
+            const btn1979 = document.getElementById('btn-1979');
+            const btn2025 = document.getElementById('btn-2025');
+
+            // Button Styles
+            if (era === '1979') {
+                btn1979.className = "px-6 py-2 rounded-full text-sm font-bold transition-all bg-orange-600 text-white shadow-md transform scale-105";
+                btn2025.className = "px-6 py-2 rounded-full text-sm font-bold text-stone-500 hover:text-stone-900 transition-all";
+            } else {
+                btn1979.className = "px-6 py-2 rounded-full text-sm font-bold text-stone-500 hover:text-stone-900 transition-all";
+                btn2025.className = "px-6 py-2 rounded-full text-sm font-bold transition-all bg-slate-600 text-white shadow-md transform scale-105";
+            }
+
+            // Render Cards
+            grid.innerHTML = '';
+            comparisonData[era].forEach((item, index) => {
+                const card = document.createElement('div');
+                const borderColor = item.theme === 'orange' ? 'border-orange-200' : 'border-slate-200';
+                const textColor = item.theme === 'orange' ? 'text-orange-700' : 'text-slate-700';
+                
+                card.className = `bg-white p-6 rounded-2xl border ${borderColor} shadow-sm card-hover animate-fade-in-up`;
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-3xl">${item.icon}</span>
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">${item.title}</span>
+                    </div>
+                    <h3 class="text-xl font-bold ${textColor} mb-2">${item.value}</h3>
+                    <p class="text-sm text-stone-600 leading-relaxed">${item.desc}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- 2. Chart Logic ---
+        function initCharts() {
+            // Sentiment Chart (Bar)
+            const ctxSentiment = document.getElementById('sentimentChart').getContext('2d');
+            new Chart(ctxSentiment, {
+                type: 'bar',
+                data: {
+                    labels: ['1979 부마 (실제)', '2025 청년 (실제)'],
+                    datasets: [
+                        {
+                            label: '긍정/중립 (연대/희망)',
+                            data: [54, 4],
+                            backgroundColor: 'rgba(234, 88, 12, 0.8)', // Orange
+                            borderRadius: 6,
+                            barPercentage: 0.6
+                        },
+                        {
+                            label: '부정 (고립/불안)',
+                            data: [46, 96],
+                            backgroundColor: 'rgba(71, 85, 105, 0.8)', // Slate
+                            borderRadius: 6,
+                            barPercentage: 0.6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            backgroundColor: 'rgba(28, 25, 23, 0.9)',
+                            titleFont: { family: "'Noto Sans KR', sans-serif" },
+                            bodyFont: { family: "'Noto Sans KR', sans-serif" }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true, max: 100, grid: { borderDash: [2, 4] } }
+                    }
+                }
+            });
+        }
+
+        // --- 3. Roadmap Tabs Logic ---
+        function switchTab(tab) {
+            const btnNational = document.getElementById('tab-national');
+            const btnUni = document.getElementById('tab-university');
+            const contentNational = document.getElementById('content-national');
+            const contentUni = document.getElementById('content-university');
+
+            if (tab === 'national') {
+                btnNational.className = "px-6 py-2 rounded-xl text-sm font-bold bg-orange-600 text-white transition-all shadow-lg";
+                btnUni.className = "px-6 py-2 rounded-xl text-sm font-bold text-stone-400 hover:text-white transition-all";
+                contentNational.classList.remove('hidden');
+                contentUni.classList.add('hidden');
+            } else {
+                btnUni.className = "px-6 py-2 rounded-xl text-sm font-bold bg-teal-600 text-white transition-all shadow-lg";
+                btnNational.className = "px-6 py-2 rounded-xl text-sm font-bold text-stone-400 hover:text-white transition-all";
+                contentUni.classList.remove('hidden');
+                contentNational.classList.add('hidden');
+            }
+        }
+
+        // --- 4. Mobile Menu Logic ---
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            toggleEra('1979');
+            initCharts();
+        });
+    </script>
+</body>
+</html>
