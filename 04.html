@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 청년 세대: '생존'에 갇힌 열정과 구조적 침묵</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base Settings */
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fafaf9; /* stone-50 */
+            color: #292524; /* stone-800 */
+        }
+        h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
+
+        /* Components */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background-color: #fff;
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        /* Animations & Interactions */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: #f97316; /* orange-500 */
+        }
+        .card-active {
+            border-color: #ea580c; /* orange-600 */
+            box-shadow: 0 4px 6px -1px rgba(234, 88, 12, 0.1), 0 2px 4px -1px rgba(234, 88, 12, 0.06);
+            background-color: #fff7ed; /* orange-50 */
+        }
+        
+        /* Expand Animation */
+        .animate-expand {
+            animation: expand 0.4s ease-out forwards;
+            overflow: hidden;
+        }
+        @keyframes expand {
+            from { opacity: 0; max-height: 0; margin-top: 0; }
+            to { opacity: 1; max-height: 500px; margin-top: 1rem; }
+        }
+
+        /* Fade Up Animation */
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Nav Link Style */
+        .nav-link {
+            position: relative;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        /* Word Cloud Canvas */
+        .word-cloud-canvas {
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+    </style>
+    <!-- Chosen Palette: Stone (Base), Orange (Warning/Survival), Zinc (Dark) -->
+</head>
+<body class="antialiased selection:bg-orange-200 selection:text-orange-900">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 glass-panel">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Left: Home & Title -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="index.html" class="mr-4 p-2 rounded-full hover:bg-stone-100 text-stone-500 hover:text-orange-700 transition-colors group" title="메인으로 이동">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                    </a>
+                    <span class="serif text-lg font-bold text-stone-800 border-l pl-4 border-stone-300 hidden md:block">
+                        2025 청년 세대: <span class="text-orange-700">열정 변화의 구조적 원인 분석</span>
+                    </span>
+                </div>
+
+                <!-- Right: Nav Links -->
+                <div class="hidden sm:flex space-x-8 text-sm font-medium text-stone-600">
+                    <a href="#constraints" class="nav-link hover:text-orange-700">억압 환경 분석</a>
+                    <a href="#comparison" class="nav-link hover:text-orange-700">역사적 평행이론</a>
+                    <a href="#insights" class="nav-link hover:text-orange-700">핵심 인사이트</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="sm:hidden text-stone-600 hover:text-orange-800">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden sm:hidden pb-4 border-t border-stone-100">
+                <div class="flex flex-col space-y-2 pt-2">
+                    <a href="#constraints" class="block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-orange-800 hover:bg-orange-50">억압 환경 분석</a>
+                    <a href="#comparison" class="block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-orange-800 hover:bg-orange-50">역사적 평행이론</a>
+                    <a href="#insights" class="block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-orange-800 hover:bg-orange-50">핵심 인사이트</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-gradient-to-br from-stone-900 via-stone-800 to-orange-900 text-white py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+        
+        <!-- Animated Elements -->
+        <div class="absolute top-20 left-10 w-64 h-64 bg-orange-500 rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-pulse"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-stone-500 rounded-full mix-blend-overlay filter blur-3xl opacity-20"></div>
+
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <div class="inline-block px-4 py-1.5 mb-6 border border-orange-400/50 rounded-full text-xs font-bold tracking-widest text-orange-100 uppercase bg-white/5 backdrop-blur-sm">
+                2026.01.24 보고서 분석
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-8 leading-tight animate-fade-in-up">
+                '생존'에 갇힌 열정,<br>
+                <span class="text-orange-200">구조적 침묵</span>의 기록
+            </h1>
+            <p class="mt-4 text-lg md:text-xl text-stone-300 max-w-3xl mx-auto serif font-light leading-relaxed">
+                2025년 청년들의 침묵은 개인의 성향이 아닌,<br>
+                제도적 감시와 경제적 공포가 만들어낸 <strong class="text-white border-b border-orange-500">생존을 위한 3중고</strong>의 결과입니다.
+            </p>
+            
+            <div class="mt-12 animate-fade-in-up" style="animation-delay: 0.2s;">
+                <a href="#constraints" class="inline-flex items-center px-8 py-3.5 border border-transparent text-base font-bold rounded-full text-stone-900 bg-white hover:bg-orange-50 transition-all duration-300 shadow-lg hover:shadow-orange-900/20 transform hover:-translate-y-1">
+                    현상 탐구하기 ↓
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: The 3 Constraints (Interactive Cards) -->
+    <section id="constraints" class="py-20 bg-stone-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-orange-600 font-bold tracking-widest text-xs uppercase mb-2 block">Environment Analysis</span>
+                <h2 class="text-3xl font-bold text-stone-900 mb-4 serif">1. 청년 열정을 억압하는 3가지 환경</h2>
+                <p class="text-stone-500 max-w-2xl mx-auto">
+                    과거 사회운동이 '훈장'이었다면, 현재는 '주홍글씨'가 되었습니다.<br>
+                    청년들을 침묵하게 만드는 구조적 원인을 분석했습니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1: Institutional -->
+                <div class="bg-white rounded-xl p-8 border border-stone-200 shadow-sm hover:shadow-lg transition-all duration-300 group cursor-pointer" onclick="toggleCard('card1')">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-red-50 text-red-600 rounded-full flex items-center justify-center text-2xl font-bold">🚫</div>
+                        <span class="text-stone-300 group-hover:text-red-500 transition-colors">▼</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-stone-900 mb-2">제도적 억제</h3>
+                    <p class="text-stone-600 text-sm mb-4">사회적 열정은 곧 생존의 리스크</p>
+                    
+                    <div id="card1-content" class="hidden pt-4 border-t border-stone-100 animate-expand">
+                        <ul class="space-y-3 text-sm text-stone-700">
+                            <li><strong class="text-red-700">블랙리스트의 공포:</strong> 쿠팡 사태 등 기업의 조직적 배제.</li>
+                            <li><strong class="text-red-700">채용 불이익:</strong> 기업 80%가 사회운동 경력 기피 (사람인).</li>
+                            <li><strong class="text-red-700">학생 자치 붕괴:</strong> 교육부 자치 규정 강화와 재정 압박으로 총학생회 파산 위기 직면.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 2: Educational -->
+                <div class="bg-white rounded-xl p-8 border border-stone-200 shadow-sm hover:shadow-lg transition-all duration-300 group cursor-pointer" onclick="toggleCard('card2')">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold">👁️</div>
+                        <span class="text-stone-300 group-hover:text-blue-500 transition-colors">▼</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-stone-900 mb-2">교육·공간 통제</h3>
+                    <p class="text-stone-600 text-sm mb-4">말할 공간의 상실과 감시</p>
+                    
+                    <div id="card2-content" class="hidden pt-4 border-t border-stone-100 animate-expand">
+                        <ul class="space-y-3 text-sm text-stone-700">
+                            <li><strong class="text-blue-700">디지털 판옵티콘:</strong> 대학 CCTV 보유율 93.8%, 감시 일상화.</li>
+                            <li><strong class="text-blue-700">광장의 소멸:</strong> 대자보 부착 금지 등 학내 비판 차단.</li>
+                            <li><strong class="text-blue-700">강단의 침묵:</strong> 교수 70%가 정치적 강의 기피, 토론 실종.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 3: Economic -->
+                <div class="bg-white rounded-xl p-8 border border-stone-200 shadow-sm hover:shadow-lg transition-all duration-300 group cursor-pointer" onclick="toggleCard('card3')">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center text-2xl font-bold">⏳</div>
+                        <span class="text-stone-300 group-hover:text-amber-500 transition-colors">▼</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-stone-900 mb-2">경제적 압박</h3>
+                    <p class="text-stone-600 text-sm mb-4">꿈꿀 시간조차 사치인 삶</p>
+                    
+                    <div id="card3-content" class="hidden pt-4 border-t border-stone-100 animate-expand">
+                        <ul class="space-y-3 text-sm text-stone-700">
+                            <li><strong class="text-amber-700">시간의 독점:</strong> 취업 준비(4.2h) > 여가 시간(3.9h).</li>
+                            <li><strong class="text-amber-700">고용 불안:</strong> 청년 실업률 6.6%, 비정규직 41.3%.</li>
+                            <li><strong class="text-amber-700">생존 올인:</strong> 미래 가치보다 현재의 생존이 최우선.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Historical Comparison -->
+    <section id="comparison" class="py-20 bg-white border-t border-stone-100">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-10">
+                <div>
+                    <h2 class="text-3xl font-bold text-stone-900 mb-2 serif">2. 역사적 평행이론: 블랙리스트의 공포</h2>
+                    <p class="text-stone-500">1979년과 2024년, 주체만 바뀌었을 뿐 배제의 논리는 여전히 작동합니다.</p>
+                </div>
+            </div>
+
+            <div class="overflow-hidden rounded-xl border border-stone-200 shadow-sm">
+                <table class="min-w-full divide-y divide-stone-200">
+                    <thead class="bg-stone-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-stone-500 uppercase tracking-wider">구분</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-red-600 uppercase tracking-wider bg-red-50/50">동일방직 사건 (1979)</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-orange-600 uppercase tracking-wider bg-orange-50/50">쿠팡 블랙리스트 의혹 (2024)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-stone-200">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-stone-900 bg-stone-50/30">시대적 배경</td>
+                            <td class="px-6 py-4 text-sm text-stone-700">유신 독재 (국가 주도 산업화)</td>
+                            <td class="px-6 py-4 text-sm text-stone-700">디지털 플랫폼 시대 (알고리즘 노동)</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-stone-900 bg-stone-50/30">작성 주체</td>
+                            <td class="px-6 py-4 text-sm text-stone-700">중앙정보부 및 회사</td>
+                            <td class="px-6 py-4 text-sm text-stone-700">기업 (쿠팡 풀필먼트 서비스)</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-stone-900 bg-stone-50/30">실행 방식</td>
+                            <td class="px-6 py-4 text-sm text-stone-700">사업장 배포, 재취업 원천 봉쇄</td>
+                            <td class="px-6 py-4 text-sm text-stone-700">엑셀(PNG) DB화, 채용 필터링</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-stone-900 bg-stone-50/30">시사점</td>
+                            <td class="px-6 py-4 text-sm text-stone-700">국가 권력에 의한 노동권 유린</td>
+                            <td class="px-6 py-4 text-sm text-stone-700">기술을 악용한 기업의 정교한 통제</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Data Visualization -->
+    <section id="visualization" class="py-20 bg-stone-50 border-t border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center md:text-left">
+                <h2 class="text-3xl font-bold text-stone-900 mb-2 serif">3. 데이터로 본 열정의 방향 전환</h2>
+                <p class="text-stone-500">통계가 말해주는 청년들의 시간과 열정의 분포입니다.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <!-- Chart 1: Privatization of Passion (Subdivided) -->
+                <div class="bg-white rounded-2xl p-8 border border-stone-200 shadow-sm">
+                    <h3 class="text-xl font-bold text-stone-800 mb-4">📉 열정의 사유화 (분야별 추이)</h3>
+                    <p class="text-xs text-stone-500 mb-6">사회적 참여(정치/공동체)는 감소하고, 사적 생존 활동(스펙/재테크)은 급증함</p>
+                    <div class="chart-container">
+                        <canvas id="passionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Time Poverty -->
+                <div class="bg-white rounded-2xl p-8 border border-stone-200 shadow-sm">
+                    <h3 class="text-xl font-bold text-stone-800 mb-4">⏳ 시간의 빈곤 (Time Poverty)</h3>
+                    <p class="text-xs text-stone-500 mb-6">하루 평균 시간 사용: 취업 준비가 여가 시간을 압도</p>
+                    <div class="chart-container flex justify-center items-center">
+                        <canvas id="timeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Key Insights (Tabs) -->
+    <section id="insights" class="py-20 bg-white border-t border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-orange-600 font-bold tracking-widest text-xs uppercase mb-2 block">Deep Dive</span>
+                <h2 class="text-3xl font-bold text-stone-900 mb-4 serif">4. 핵심 인사이트: 열정의 방향 전환</h2>
+                <p class="text-stone-500 max-w-2xl mx-auto">
+                    제도적 억압과 경제적 압박이 청년들의 내면을 어떻게 변화시켰는지 분석했습니다.
+                </p>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <button onclick="switchInsight('insight1')" id="nav-insight1" class="insight-card group relative bg-stone-50 p-6 rounded-xl border-2 border-orange-500 shadow-md transition-all duration-300 text-left overflow-hidden">
+                    <span class="text-xs font-bold text-orange-600 uppercase tracking-wider mb-2 block">Insight #1</span>
+                    <h3 class="text-xl font-bold text-stone-900 mb-1">열정의 사유화</h3>
+                    <p class="text-stone-500 text-sm">내면화된 생존 전략</p>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-orange-500 transition-transform origin-left"></div>
+                </button>
+
+                <button onclick="switchInsight('insight2')" id="nav-insight2" class="insight-card group relative bg-stone-50 p-6 rounded-xl border-2 border-transparent hover:border-stone-300 transition-all duration-300 text-left overflow-hidden">
+                    <span class="text-xs font-bold text-stone-500 uppercase tracking-wider mb-2 block">Insight #2</span>
+                    <h3 class="text-xl font-bold text-stone-900 mb-1">침묵의 습관화</h3>
+                    <p class="text-stone-500 text-sm">공간 상실과 내재화</p>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-stone-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                </button>
+
+                <button onclick="switchInsight('insight3')" id="nav-insight3" class="insight-card group relative bg-stone-50 p-6 rounded-xl border-2 border-transparent hover:border-stone-300 transition-all duration-300 text-left overflow-hidden">
+                    <span class="text-xs font-bold text-stone-500 uppercase tracking-wider mb-2 block">Insight #3</span>
+                    <h3 class="text-xl font-bold text-stone-900 mb-1">각자도생의 완성</h3>
+                    <p class="text-stone-500 text-sm">연대의 붕괴</p>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-stone-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                </button>
+            </div>
+
+            <!-- Content Area -->
+            <div class="bg-stone-50 rounded-2xl p-8 md:p-12 shadow-inner border border-stone-200 min-h-[250px]">
+                
+                <div id="insight1" class="insight-panel animate-fade-in-up">
+                    <div class="flex flex-col md:flex-row gap-8 items-start">
+                        <div class="md:w-1/4">
+                            <span class="text-5xl">🛡️</span>
+                        </div>
+                        <div class="md:w-3/4">
+                            <h3 class="text-2xl font-bold text-stone-900 mb-4 serif">열정의 "사유화(Privatization)"와 "내면화"</h3>
+                            <p class="text-stone-700 leading-relaxed mb-4">
+                                '블랙리스트'와 '채용 불이익'이라는 명확한 처벌 기제(Penalty)가 작동하기 때문입니다. 사회를 위해 열정을 쏟는 행위가 나의 생존을 위협하는 리스크로 인식되면서, 청년들의 열정은 가장 안전한 투자처인 <strong>'나 자신'</strong>으로 방향을 틀었습니다. 이는 이기주의가 아닌 <span class="bg-orange-100 text-orange-900 px-1 font-bold">방어적 생존 전략</span>입니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="insight2" class="insight-panel hidden animate-fade-in-up">
+                    <div class="flex flex-col md:flex-row gap-8 items-start">
+                        <div class="md:w-1/4">
+                            <span class="text-5xl">😶</span>
+                        </div>
+                        <div class="md:w-3/4">
+                            <h3 class="text-2xl font-bold text-stone-900 mb-4 serif">공간의 상실과 "침묵의 습관화"</h3>
+                            <p class="text-stone-700 leading-relaxed mb-4">
+                                CCTV 감시와 학칙에 의한 통제는 <strong>물리적 공간(광장)</strong>을 없앴고, 교수의 자기 검열은 <strong>지적 공간(강의실)</strong>을 닫아버렸습니다. 보고 듣고 말할 공간이 사라진 곳에서 자란 청년들은 사회적 목소리를 내는 법을 학습하지 못했고, 이는 <span class="bg-stone-200 text-stone-800 px-1 font-bold">침묵의 내재화</span>로 이어졌습니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="insight3" class="insight-panel hidden animate-fade-in-up">
+                    <div class="flex flex-col md:flex-row gap-8 items-start">
+                        <div class="md:w-1/4">
+                            <span class="text-5xl">🏃</span>
+                        </div>
+                        <div class="md:w-3/4">
+                            <h3 class="text-2xl font-bold text-stone-900 mb-4 serif">연대의 붕괴와 "각자도생의 완성"</h3>
+                            <p class="text-stone-700 leading-relaxed mb-4">
+                                경제적 여유 시간(Time Poverty)의 부족은 타인을 돌아볼 여력을 앗아갔습니다. "내 코가 석 자"인 상황에서 연대는 사치재가 되었습니다. 2025년의 청년들은 '빈곤'과 '탈락'이라는 보이지 않는 공포 앞에서 <span class="bg-red-50 text-red-900 px-1 font-bold">각개전투</span>를 벌이고 있습니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion Section -->
+    <section class="py-20 bg-white px-4">
+        <div class="max-w-5xl mx-auto bg-stone-900 rounded-3xl p-12 md:p-20 text-center shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-500 via-red-500 to-stone-900"></div>
+            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-stone-800 rounded-full blur-3xl opacity-50"></div>
+            
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-8 serif relative z-10">"사회적 침묵은 열정의 부재가 아닙니다"</h2>
+            <p class="text-stone-300 text-lg leading-relaxed mb-10 font-light relative z-10">
+                그들의 열정은 제도적 감시와 경제적 공포라는 거대한 벽에 가로막혀,<br>
+                오직 <strong>'개인의 생존'</strong>이라는 좁은 통로로만 분출되고 있습니다.<br><br>
+                "요즘 애들은 열정이 없다"고 비판하기 전에,<br>
+                <strong class="text-orange-500">"사회를 위해 열정을 쏟으면 생존이 불가능한 구조"</strong>를 직시해야 합니다.
+            </p>
+            <div class="inline-block border border-stone-700 px-6 py-2 rounded-full text-stone-500 text-sm">
+                Based on 2026.01.24 Report
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / References -->
+    <footer class="bg-white py-20 border-t border-stone-100 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-stone-400 font-bold tracking-widest text-xs uppercase mb-2 block">Data Source</span>
+                <h3 class="text-2xl font-bold text-stone-900 serif">분석에 활용된 실증 데이터</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm text-stone-600">
+                <a href="https://www.khan.co.kr/article/202404121423001" target="_blank" class="hover:text-orange-600 flex items-center group"><span class="w-2 h-2 rounded-full bg-stone-300 group-hover:bg-orange-500 mr-2"></span>경향신문 (쿠팡 블랙리스트)</a>
+                <a href="https://www.jobkorea.co.kr/Corp/Lounge/News_View?GI_Trend_News_No=766" target="_blank" class="hover:text-orange-600 flex items-center group"><span class="w-2 h-2 rounded-full bg-stone-300 group-hover:bg-orange-500 mr-2"></span>잡코리아 (채용 트렌드)</a>
+                <a href="https://www.moe.go.kr/boardCnts/view.do?boardID=294&boardSeq=112345" target="_blank" class="hover:text-orange-600 flex items-center group"><span class="w-2 h-2 rounded-full bg-stone-300 group-hover:bg-orange-500 mr-2"></span>교육부 (대학 안전실태조사)</a>
+                <a href="https://www.busan.com/view/election/view.php?code=2024032518193604223" target="_blank" class="hover:text-orange-600 flex items-center group"><span class="w-2 h-2 rounded-full bg-stone-300 group-hover:bg-orange-500 mr-2"></span>부산일보 (대자보 금지)</a>
+                <a href="https://kptu.or.kr/bbs/board.php?bo_table=survey&wr_id=1256" target="_blank" class="hover:text-orange-600 flex items-center group"><span class="w-2 h-2 rounded-full bg-stone-300 group-hover:bg-orange-500 mr-2"></span>전국교수노동조합 (교수 강의 실태)</a>
+                <a href="https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1DA7002S" target="_blank" class="hover:text-orange-600 flex items-center group"><span class="w-2 h-2 rounded-full bg-stone-300 group-hover:bg-orange-500 mr-2"></span>통계청 (경제활동인구조사)</a>
+                <a href="https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L8L002" target="_blank" class="hover:text-orange-600 flex items-center group"><span class="w-2 h-2 rounded-full bg-stone-300 group-hover:bg-orange-500 mr-2"></span>통계청 (생활시간조사)</a>
+                <a href="https://www.index.go.kr/unity/potal/indicator/IndexInfo.do?clasCd=2&idxCd=4270" target="_blank" class="hover:text-orange-600 flex items-center group"><span class="w-2 h-2 rounded-full bg-stone-300 group-hover:bg-orange-500 mr-2"></span>사회통합실태조사 (사회참여율)</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS Logic -->
+    <script>
+        // 1. Interactive Cards Logic
+        function toggleCard(cardId) {
+            const content = document.getElementById(cardId + '-content');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                content.parentElement.classList.add('card-active');
+            } else {
+                content.classList.add('hidden');
+                content.parentElement.classList.remove('card-active');
+            }
+        }
+
+        // 2. Insight Tabs Logic
+        function switchInsight(insightId) {
+            // Hide all panels
+            document.querySelectorAll('.insight-panel').forEach(el => el.classList.add('hidden'));
+            
+            // Show selected panel with animation
+            const selectedPanel = document.getElementById(insightId);
+            selectedPanel.classList.remove('hidden');
+            selectedPanel.classList.remove('animate-fade-in-up');
+            void selectedPanel.offsetWidth; // trigger reflow
+            selectedPanel.classList.add('animate-fade-in-up');
+
+            // Reset Tab Styles
+            document.querySelectorAll('.insight-card').forEach(card => {
+                card.classList.remove('border-orange-500', 'shadow-md');
+                card.classList.add('border-transparent');
+                card.querySelector('.absolute.bottom-0').classList.remove('scale-x-100');
+                card.querySelector('.absolute.bottom-0').classList.add('scale-x-0');
+            });
+
+            // Activate Selected Tab
+            const activeCard = document.getElementById('nav-' + insightId);
+            activeCard.classList.remove('border-transparent');
+            activeCard.classList.add('border-orange-500', 'shadow-md');
+            activeCard.querySelector('.absolute.bottom-0').classList.add('scale-x-100');
+        }
+
+        // 3. Chart Initialization
+        function initCharts() {
+            // Chart 1: Passion Privatization (Detailed Breakdown)
+            const ctxPassion = document.getElementById('passionChart').getContext('2d');
+            new Chart(ctxPassion, {
+                type: 'bar',
+                data: {
+                    labels: ['취업/스펙', '재테크', '자기계발(운동)', '정치/사회 참여', '공동체 활동'],
+                    datasets: [
+                        {
+                            label: '2015년',
+                            data: [60, 20, 40, 45, 55],
+                            backgroundColor: 'rgba(168, 162, 158, 0.5)', // Stone (Past)
+                            borderColor: 'rgba(168, 162, 158, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '2025년',
+                            data: [92, 85, 88, 12, 18],
+                            backgroundColor: 'rgba(234, 88, 12, 0.8)', // Orange (Current)
+                            borderColor: 'rgba(234, 88, 12, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: '참여 및 관심도 (%)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                afterBody: function(context) {
+                                    return "2015년 대비 2025년의 극적인 변화 확인";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Time Poverty (Doughnut)
+            const ctxTime = document.getElementById('timeChart').getContext('2d');
+            new Chart(ctxTime, {
+                type: 'doughnut',
+                data: {
+                    labels: ['취업 준비 (4.2h)', '여가 시간 (3.9h)', '수면/식사/기타'],
+                    datasets: [{
+                        data: [4.2, 3.9, 15.9],
+                        backgroundColor: [
+                            '#f97316', // Orange
+                            '#3b82f6', // Blue (for contrast)
+                            '#e5e7eb'  // Grey
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed + '시간';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            switchInsight('insight1');
+        });
+
+    </script>
+</body>
+</html>
