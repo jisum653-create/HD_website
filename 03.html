@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 청년 세대: 각자도생의 열정과 방어적 무관심</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base Settings */
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fafaf9; /* stone-50 */
+            color: #292524; /* stone-800 */
+        }
+        h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
+
+        /* Components */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background-color: #fff;
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        .chart-container-large {
+            height: 500px; 
+        }
+        
+        /* Animations & Interactions */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: #f97316; /* orange-500 */
+        }
+        .card-active {
+            border-color: #ea580c; /* orange-600 */
+            box-shadow: 0 4px 6px -1px rgba(234, 88, 12, 0.1), 0 2px 4px -1px rgba(234, 88, 12, 0.06);
+            background-color: #fff7ed; /* orange-50 */
+        }
+        
+        /* Expand Animation */
+        .animate-expand {
+            animation: expand 0.4s ease-out forwards;
+            overflow: hidden;
+        }
+        @keyframes expand {
+            from { opacity: 0; max-height: 0; margin-top: 0; }
+            to { opacity: 1; max-height: 500px; margin-top: 1rem; }
+        }
+
+        /* Fade Up Animation */
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Nav Link Style (Color only) */
+        .nav-link {
+            position: relative;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        /* Word Cloud Canvas */
+        .word-cloud-canvas {
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f5f5f4; }
+        ::-webkit-scrollbar-thumb { background-color: #d6d3d1; border-radius: 20px; }
+    </style>
+    <!-- Palette: Stone (Base), Orange (Passion), Zinc (Dark) -->
+</head>
+<body class="antialiased selection:bg-orange-200 selection:text-orange-900">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 glass-panel">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Left: Home & Title -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="index.html" class="mr-4 p-2 rounded-full hover:bg-stone-100 text-stone-500 hover:text-orange-700 transition-colors group" title="메인으로 이동">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                    </a>
+                    <span class="serif text-lg font-bold text-stone-800 border-l pl-4 border-stone-300 hidden md:block">
+                        2025 청년 세대: <span class="text-orange-700">각자도생과 열정</span>
+                    </span>
+                </div>
+
+                <!-- Right: Nav Links (Numbers removed) -->
+                <div class="hidden sm:flex space-x-8 text-sm font-medium text-stone-600">
+                    <a href="#dashboard" class="nav-link hover:text-orange-700">트렌드 데이터</a>
+                    <a href="#analysis" class="nav-link hover:text-orange-700">데이터 시각화</a>
+                    <a href="#insights" class="nav-link hover:text-orange-700">핵심 인사이트</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="sm:hidden text-stone-600 hover:text-orange-800">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden sm:hidden pb-4 border-t border-stone-100">
+                <div class="flex flex-col space-y-2 pt-2">
+                    <a href="#dashboard" class="block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-orange-800 hover:bg-orange-50">트렌드 데이터</a>
+                    <a href="#analysis" class="block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-orange-800 hover:bg-orange-50">데이터 시각화</a>
+                    <a href="#insights" class="block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-orange-800 hover:bg-orange-50">핵심 인사이트</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-gradient-to-br from-stone-900 via-stone-800 to-orange-900 text-white py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+        <div class="absolute top-20 left-10 w-64 h-64 bg-orange-500 rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-pulse"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-stone-500 rounded-full mix-blend-overlay filter blur-3xl opacity-20"></div>
+
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <div class="inline-block px-4 py-1.5 mb-6 border border-orange-400/50 rounded-full text-xs font-bold tracking-widest text-orange-100 uppercase bg-white/5 backdrop-blur-sm">
+                2026.01.24 Trend Report Analysis
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-8 leading-tight animate-fade-in-up">
+                '각자도생'의 열정,<br>
+                <span class="text-orange-200">방어적 무관심</span>의 이면
+            </h1>
+            <p class="mt-4 text-lg md:text-xl text-stone-300 max-w-3xl mx-auto serif font-light leading-relaxed">
+                "투표소 대신 헬스장으로, 광장 대신 내 방으로."<br>
+                2025년 청년들의 침묵은 무기력이 아닌, <strong class="text-white border-b border-orange-500">가장 치열한 생존 전략</strong>입니다.
+            </p>
+            
+            <div class="mt-12 animate-fade-in-up" style="animation-delay: 0.2s;">
+                <a href="#dashboard" class="inline-flex items-center px-8 py-3.5 border border-transparent text-base font-bold rounded-full text-stone-900 bg-white hover:bg-orange-50 transition-all duration-300 shadow-lg hover:shadow-orange-900/20 transform hover:-translate-y-1">
+                    현상 탐구하기 ↓
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: Trend Dashboard -->
+    <section id="dashboard" class="py-20 bg-stone-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-orange-600 font-bold tracking-widest text-xs uppercase mb-2 block">Trend Analysis</span>
+                <h2 class="text-3xl font-bold text-stone-900 mb-4 serif">1. 10대 생존 트렌드 데이터</h2>
+                <p class="text-stone-500 max-w-2xl mx-auto">
+                    정치, 사회, 경제 전반에서 포착된 청년들의 방어적 생존 전략을 분석했습니다.<br>
+                    카드를 클릭하여 상세 키워드 분석을 확인하세요.
+                </p>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex flex-wrap justify-center gap-3 mb-10">
+                <button class="filter-btn active px-5 py-2.5 rounded-full bg-stone-800 text-white font-medium text-sm transition shadow-md hover:bg-stone-700" data-filter="all">전체 보기</button>
+                <button class="filter-btn px-5 py-2.5 rounded-full bg-white text-stone-600 border border-stone-200 hover:border-orange-300 hover:text-orange-700 font-medium text-sm transition shadow-sm" data-filter="society">정치/사회</button>
+                <button class="filter-btn px-5 py-2.5 rounded-full bg-white text-stone-600 border border-stone-200 hover:border-orange-300 hover:text-orange-700 font-medium text-sm transition shadow-sm" data-filter="economy">경제/생존</button>
+                <button class="filter-btn px-5 py-2.5 rounded-full bg-white text-stone-600 border border-stone-200 hover:border-orange-300 hover:text-orange-700 font-medium text-sm transition shadow-sm" data-filter="lifestyle">관계/라이프</button>
+            </div>
+
+            <!-- Grid Container -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="cards-container">
+                <!-- Cards injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Data Analysis & Visualization -->
+    <section id="analysis" class="py-20 bg-white border-t border-stone-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl font-bold text-stone-900 mb-2 serif">2. 내면의 데이터 시각화</h2>
+                    <p class="text-stone-500">육각형 인간의 압박과 텍스트 마이닝 키워드 분석 결과입니다.</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex gap-4 text-sm font-medium">
+                    <span class="flex items-center text-red-700"><span class="w-3 h-3 rounded-full bg-red-600 mr-2"></span>행동</span>
+                    <span class="flex items-center text-blue-700"><span class="w-3 h-3 rounded-full bg-blue-600 mr-2"></span>가치</span>
+                    <span class="flex items-center text-amber-600"><span class="w-3 h-3 rounded-full bg-amber-500 mr-2"></span>감정</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <!-- Chart 1: Radar -->
+                <div class="bg-stone-50 rounded-2xl p-8 border border-stone-200 shadow-inner">
+                    <div class="mb-6 border-b border-stone-200 pb-4">
+                        <h3 class="text-xl font-bold text-stone-800">📊 육각형 인간의 압박 (Pressure)</h3>
+                        <p class="text-sm text-stone-500 mt-1">사회로부터 강요받는 6가지 완벽함의 기준 vs 체감 압박도</p>
+                    </div>
+                    <div class="chart-container bg-white">
+                        <canvas id="hexRadarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Word Cloud (Large Canvas) -->
+                <div class="bg-stone-50 rounded-2xl p-8 border border-stone-200 shadow-inner">
+                    <div class="mb-6 border-b border-stone-200 pb-4">
+                        <h3 class="text-xl font-bold text-stone-800">☁️ 키워드 워드클라우드</h3>
+                        <p class="text-sm text-stone-500 mt-1">10대 트렌드 자료에서 추출한 핵심 키워드 빈도 시각화</p>
+                    </div>
+                    <div class="chart-container chart-container-large bg-white relative group">
+                        <canvas id="wordCloudCanvas" class="word-cloud-canvas"></canvas>
+                        <!-- Tooltip styled for visibility -->
+                        <div id="cloud-tooltip" class="absolute hidden bg-white text-stone-800 text-xs px-3 py-2 rounded-lg pointer-events-none z-10 shadow-xl border border-stone-100 transition-opacity duration-200"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sentiment Analysis Section -->
+            <div class="mt-10 flex flex-col md:flex-row gap-10 items-center bg-stone-50 rounded-2xl p-8 md:p-10 border border-stone-200 shadow-inner">
+                <div class="w-full md:w-1/2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide">Analysis Report</span>
+                        <h3 class="text-2xl font-bold text-stone-900 serif">감정 키워드 분석 결과</h3>
+                    </div>
+                    <p class="text-stone-700 leading-relaxed mb-6">
+                        추출된 키워드의 감정 분석 결과, <strong class="text-red-600 bg-red-50 px-1 rounded">부정적 감정(Negative Emotions)</strong>의 비중이 매우 높게 나타났습니다. 
+                        이는 청년들이 느끼는 사회적 압박감, 불안, 무기력함이 내면에 깊이 자리 잡고 있음을 시사합니다.
+                    </p>
+                    <div class="bg-white p-5 rounded-xl border-l-4 border-red-500 shadow-sm">
+                        <span class="block text-xs font-bold text-stone-400 uppercase mb-1">Key Takeaway</span>
+                        <p class="text-stone-800 font-medium italic">
+                            "겉으로 드러나는 '무관심'은 사실 내면의 <strong>불안과 두려움</strong>으로부터 자신을 지키기 위한 방어적 기제입니다."
+                        </p>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 flex justify-center">
+                    <div class="relative w-64 h-64">
+                        <canvas id="sentimentChart"></canvas>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                            <span class="text-4xl font-bold text-stone-800">82%</span>
+                            <span class="text-xs text-red-500 uppercase font-bold mt-1">Negative</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Section 3: Key Insights -->
+    <section id="insights" class="py-20 bg-stone-50 border-t border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-orange-600 font-bold tracking-widest text-xs uppercase mb-2 block">Deep Dive</span>
+                <h2 class="text-3xl font-bold text-stone-900 mb-4 serif">3. 2025 청년 열정의 3가지 얼굴</h2>
+                <p class="text-stone-500 max-w-2xl mx-auto">
+                    데이터가 말해주는 그들의 진짜 속마음은 무엇일까요?<br>
+                    카드를 클릭하여 상세 분석 결과를 확인하세요.
+                </p>
+            </div>
+
+            <!-- Tab Navigation Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <button onclick="switchInsight('insight1')" id="nav-insight1" class="insight-card group relative bg-white p-6 rounded-xl border-2 border-orange-500 shadow-lg transform scale-105 transition-all duration-300 text-left overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl font-serif">01</span>
+                    </div>
+                    <span class="text-xs font-bold text-orange-600 uppercase tracking-wider mb-2 block">Insight #1</span>
+                    <h3 class="text-xl font-bold text-stone-900 mb-1">사회에서 나에게로</h3>
+                    <p class="text-stone-500 text-sm">Inward Passion</p>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-orange-500 transition-transform origin-left"></div>
+                </button>
+
+                <button onclick="switchInsight('insight2')" id="nav-insight2" class="insight-card group relative bg-white p-6 rounded-xl border-2 border-transparent hover:border-stone-300 hover:shadow-md transition-all duration-300 text-left overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl font-serif">02</span>
+                    </div>
+                    <span class="text-xs font-bold text-stone-500 uppercase tracking-wider mb-2 block">Insight #2</span>
+                    <h3 class="text-xl font-bold text-stone-900 mb-1">연대 대신 접속</h3>
+                    <p class="text-stone-500 text-sm">Efficient Connection</p>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-stone-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                </button>
+
+                <button onclick="switchInsight('insight3')" id="nav-insight3" class="insight-card group relative bg-white p-6 rounded-xl border-2 border-transparent hover:border-stone-300 hover:shadow-md transition-all duration-300 text-left overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl font-serif">03</span>
+                    </div>
+                    <span class="text-xs font-bold text-stone-500 uppercase tracking-wider mb-2 block">Insight #3</span>
+                    <h3 class="text-xl font-bold text-stone-900 mb-1">완벽과 무기력 사이</h3>
+                    <p class="text-stone-500 text-sm">Polarized Emotion</p>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-stone-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                </button>
+            </div>
+
+            <!-- Content Display Area -->
+            <div class="bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-stone-200 min-h-[300px]">
+                
+                <!-- Content 1 -->
+                <div id="insight1" class="insight-panel animate-fade-in-up">
+                    <div class="flex flex-col md:flex-row gap-10 items-start">
+                        <div class="md:w-1/3 text-center md:text-left pt-2">
+                            <div class="inline-block p-4 bg-orange-50 rounded-full mb-6">
+                                <span class="text-5xl">🔥</span>
+                            </div>
+                            <h3 class="text-3xl font-bold text-stone-900 mb-4 serif leading-tight">열정의 방향 전환:<br>Inward Passion</h3>
+                            <div class="w-12 h-1 bg-orange-500 mb-6 mx-auto md:mx-0"></div>
+                        </div>
+                        <div class="md:w-2/3 space-y-6">
+                            <div class="bg-stone-50 p-6 rounded-xl border-l-4 border-stone-400">
+                                <h4 class="font-bold text-stone-800 mb-2 text-sm uppercase tracking-wide">Analysis</h4>
+                                <p class="text-stone-700 leading-relaxed">
+                                    과거(1979년) 청년들의 에너지가 '독재 타도' 등 외부 사회의 구조적 모순을 향해 폭발했다면, 2025년의 에너지는 <span class="bg-orange-100 text-orange-800 px-1 font-bold">철저히 내면과 개인의 삶</span>으로 수렴됩니다.
+                                </p>
+                            </div>
+                            <p class="text-lg text-stone-800 font-medium leading-relaxed serif">
+                                "갓생, 짠테크, 스펙 관리는 '통제 불가능한 세상' 대신 '통제 가능한 나'를 지키기 위한 몸부림입니다. 사회적 무관심은 에너지가 없어서가 아니라, 나를 지키는 데 모든 에너지를 소진한 <span class="text-orange-600 underline decoration-2 underline-offset-4">선택적 방전</span> 상태입니다."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content 2 -->
+                <div id="insight2" class="insight-panel hidden animate-fade-in-up">
+                    <div class="flex flex-col md:flex-row gap-10 items-start">
+                        <div class="md:w-1/3 text-center md:text-left pt-2">
+                            <div class="inline-block p-4 bg-stone-100 rounded-full mb-6">
+                                <span class="text-5xl">🤝</span>
+                            </div>
+                            <h3 class="text-3xl font-bold text-stone-900 mb-4 serif leading-tight">관계의 가성비:<br>Efficient Connection</h3>
+                            <div class="w-12 h-1 bg-stone-500 mb-6 mx-auto md:mx-0"></div>
+                        </div>
+                        <div class="md:w-2/3 space-y-6">
+                            <div class="bg-stone-50 p-6 rounded-xl border-l-4 border-stone-400">
+                                <h4 class="font-bold text-stone-800 mb-2 text-sm uppercase tracking-wide">Analysis</h4>
+                                <p class="text-stone-700 leading-relaxed">
+                                    손절, 인덱스 관계, AI 대화 등의 키워드는 인간관계조차 <span class="bg-stone-200 text-stone-800 px-1 font-bold">효율과 리스크 관리</span>의 대상이 되었음을 보여줍니다.
+                                </p>
+                            </div>
+                            <p class="text-lg text-stone-800 font-medium leading-relaxed serif">
+                                "감정 노동을 유발하는 깊은 연대보다는, 필요할 때만 연결되고 언제든 끊을 수 있는 '느슨하고 안전한 관계'를 선호합니다. 이는 고립이 아닌, 상처받지 않으면서도 외로움을 달래려는 <span class="text-stone-600 underline decoration-2 underline-offset-4">스마트한 방어 전략</span>입니다."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content 3 -->
+                <div id="insight3" class="insight-panel hidden animate-fade-in-up">
+                    <div class="flex flex-col md:flex-row gap-10 items-start">
+                        <div class="md:w-1/3 text-center md:text-left pt-2">
+                            <div class="inline-block p-4 bg-stone-100 rounded-full mb-6">
+                                <span class="text-5xl">⚖️</span>
+                            </div>
+                            <h3 class="text-3xl font-bold text-stone-900 mb-4 serif leading-tight">감정의 양극화:<br>Polarized Emotion</h3>
+                            <div class="w-12 h-1 bg-stone-500 mb-6 mx-auto md:mx-0"></div>
+                        </div>
+                        <div class="md:w-2/3 space-y-6">
+                            <div class="bg-stone-50 p-6 rounded-xl border-l-4 border-stone-400">
+                                <h4 class="font-bold text-stone-800 mb-2 text-sm uppercase tracking-wide">Analysis</h4>
+                                <p class="text-stone-700 leading-relaxed">
+                                    한쪽에서는 완벽, 육각형 인간을 추구하며 치열하게 경쟁하지만, 다른 한쪽에서는 <span class="bg-stone-200 text-stone-800 px-1 font-bold">은둔, 무기력, 포기</span>가 동시에 나타납니다.
+                                </p>
+                            </div>
+                            <p class="text-lg text-stone-800 font-medium leading-relaxed serif">
+                                "기준이 너무 높아 도달할 수 없을 때, 청년들은 극도의 압박을 느끼거나 아예 경기장을 떠나는 양자택일의 상황에 놓입니다. 이들의 분노는 '거대 악'이 아니라, 내 노력을 배신하는 <span class="text-stone-600 underline decoration-2 underline-offset-4">불공정과 박탈감</span>을 향해 있습니다."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion Section -->
+    <section class="py-20 bg-white px-4">
+        <div class="max-w-5xl mx-auto bg-stone-900 rounded-3xl p-12 md:p-20 text-center shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-500 via-red-500 to-stone-900"></div>
+            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-stone-800 rounded-full blur-3xl opacity-50"></div>
+            
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-8 serif relative z-10">"무관심이 아닌, 처절한 생존 전략"</h2>
+            <p class="text-stone-300 text-lg md:text-xl leading-relaxed mb-10 font-light relative z-10">
+                2025년 청년들의 '사회적 무관심'을 비난하기보다,<br>
+                각자도생의 정글에서 살아남기 위한 그들의 <strong>방어 기제</strong>를 이해해야 합니다.<br>
+                <br>
+                그들의 열정은 식지 않았습니다.<br>
+                다만 <strong class="text-orange-500 border-b border-orange-500 pb-1">나의 존립</strong>을 위해 맹렬히 타오르고 있을 뿐입니다.
+            </p>
+            <div class="inline-block border border-stone-700 px-6 py-2 rounded-full text-stone-500 text-sm">
+                Based on 2026.01.24 Analysis Report
+            </div>
+        </div>
+    </section>
+
+    <!-- References Section (Text List) -->
+    <footer class="bg-white py-20 border-t border-stone-100 px-4">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-stone-400 font-bold tracking-widest text-xs uppercase mb-2 block">References</span>
+                <h3 class="text-2xl font-bold text-stone-900 serif">분석에 활용된 핵심 자료 출처</h3>
+            </div>
+            
+            <!-- Simple List as requested -->
+            <div class="bg-stone-50 rounded-2xl p-8 md:p-12" id="references-list">
+                <!-- Links injected by JS -->
+            </div>
+            
+            <div class="mt-12 text-center text-stone-400 text-xs">
+                <p>본 페이지는 [보고서] 2025 청년 세대: '각자도생'의 열정과 '방어적' 무관심 (2026.01.24)을 기반으로 제작되었습니다.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // 1. Data Store
+        const trendData = [
+            {
+                id: 1,
+                source: "세계일보",
+                title: "길 잃은 표심, 투표 보류",
+                summary: "기성 정치의 양극단화와 효능감 상실로 투표를 포기하거나 보류. 사회 변화보다 내 삶에 집중.",
+                category: "society",
+                keywords: { action: "침묵/외면", value: "실리/내 삶", emotion: "냉소/무관심" },
+                icon: "🗳️",
+                link: "https://www.segye.com"
+            },
+            {
+                id: 2,
+                source: "연합뉴스",
+                title: "고립·은둔 청년 54만",
+                summary: "과도한 경쟁과 실패 경험으로 사회적 단절 선택. 기준 미달의 자신을 보호하려는 방어 기제.",
+                category: "society",
+                keywords: { action: "단절/잠적", value: "안전/보호", emotion: "무기력/두려움" },
+                icon: "🚪",
+                link: "https://www.yna.co.kr"
+            },
+            {
+                id: 3,
+                source: "공감신문",
+                title: "국가 불신과 갓생",
+                summary: "국가 시스템 불신으로 각자도생을 위한 자기계발(갓생)과 재테크에 몰두.",
+                category: "economy",
+                keywords: { action: "스펙/투자", value: "능력주의/자산", emotion: "불안/절박함" },
+                icon: "🔥",
+                link: "https://www.gokorea.kr"
+            },
+            {
+                id: 4,
+                source: "국민일보",
+                title: "공정 요구와 박탈감",
+                summary: "노력해도 계층 이동 불가능 인식. 거창한 정의보다 당장의 기회 박탈과 불공정에 분노.",
+                category: "society",
+                keywords: { action: "계산/비교", value: "공정/보상", emotion: "박탈감/억울함" },
+                icon: "⚖️",
+                link: "https://www.kmib.co.kr"
+            },
+            {
+                id: 5,
+                source: "트렌드코리아",
+                title: "육각형 인간의 압박",
+                summary: "외모, 학력, 자산 등 모든 면에서 완벽을 강요받음. 도달 불가능한 완벽함에 절망.",
+                category: "lifestyle",
+                keywords: { action: "줄세우기/포기", value: "완벽/스펙", emotion: "열등감/강박" },
+                icon: "💎",
+                link: "https://www.youtube.com/watch?v=kvKNrbE0gZs"
+            },
+            {
+                id: 6,
+                source: "한경비즈니스",
+                title: "셀프 다독임",
+                summary: "외부 성취보다 멘탈 관리로 내면 안정 추구. 불안한 현실에서 스스로를 위로.",
+                category: "lifestyle",
+                keywords: { action: "명상/차단", value: "정신건강", emotion: "안도/버거움" },
+                icon: "🧘",
+                link: "https://magazine.hankyung.com/business/article/202411139872b"
+            },
+            {
+                id: 7,
+                source: "KT Y트렌드",
+                title: "AI-tionship",
+                summary: "인간관계 피로감을 피해 통제 가능한 AI와 소통하며 위로받음.",
+                category: "lifestyle",
+                keywords: { action: "대화/로그아웃", value: "통제/효율", emotion: "편안함/안전" },
+                icon: "🤖",
+                link: "https://www.pointe.co.kr/news/articleView.html?idxno=53440"
+            },
+            {
+                id: 8,
+                source: "오픈서베이",
+                title: "옴니보어 소비와 짠테크",
+                summary: "생필품은 극도로 아끼고(짠테크) 좋아하는 것엔 과감히 투자(디깅)하는 양면성.",
+                category: "economy",
+                keywords: { action: "절약/디깅", value: "가성비/취향", emotion: "만족/팍팍함" },
+                icon: "💸",
+                link: "https://blog.opensurvey.co.kr/news/trendreport-2025-recap-1/"
+            },
+            {
+                id: 9,
+                source: "대학내일",
+                title: "인덱스 관계",
+                summary: "목적에 따라 관계를 분류하고 관리. 깊은 관계의 부담을 줄이는 효율적 소통.",
+                category: "lifestyle",
+                keywords: { action: "분류/차단", value: "효율/거리두기", emotion: "홀가분함" },
+                icon: "🗂️",
+                link: "https://www.20slab.org"
+            },
+            {
+                id: 10,
+                source: "캐릿",
+                title: "도파민 디톡스",
+                summary: "과도한 디지털 자극에 지쳐 멍때리기 등으로 뇌 휴식 추구.",
+                category: "lifestyle",
+                keywords: { action: "멍때리기", value: "휴식/해독", emotion: "지침/회복" },
+                icon: "🧠",
+                link: "https://www.careet.net"
+            }
+        ];
+
+        // 2. DOM Elements
+        const cardsContainer = document.getElementById('cards-container');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        // 3. Render Functions
+        function renderCards(filter) {
+            cardsContainer.innerHTML = '';
+            
+            const filteredData = filter === 'all' 
+                ? trendData 
+                : trendData.filter(item => item.category === filter);
+
+            filteredData.forEach(item => {
+                const card = document.createElement('div');
+                card.id = `card-${item.id}`;
+                card.className = 'bg-white rounded-xl p-6 border border-stone-200 card-hover cursor-pointer relative group transition-all duration-300';
+                card.onclick = () => toggleCard(item.id);
+                
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-3xl filter grayscale group-hover:grayscale-0 transition-all">${item.icon}</span>
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">${item.source}</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-stone-900 mb-2 group-hover:text-orange-700 transition-colors">${item.title}</h3>
+                    <p class="text-sm text-stone-600 leading-relaxed">${item.summary}</p>
+                    
+                    <div id="detail-${item.id}" class="hidden pt-4 border-t border-stone-100 animate-expand">
+                        <div class="grid grid-cols-1 gap-3 text-sm mb-6">
+                            <div class="flex items-start">
+                                <span class="text-red-700 font-bold min-w-[3rem]">행동</span>
+                                <span class="text-stone-700 font-medium">${item.keywords.action}</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-blue-700 font-bold min-w-[3rem]">가치</span>
+                                <span class="text-stone-700 font-medium">${item.keywords.value}</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="text-amber-600 font-bold min-w-[3rem]">감정</span>
+                                <span class="text-stone-700 font-medium">${item.keywords.emotion}</span>
+                            </div>
+                        </div>
+                        <a href="${item.link}" target="_blank" onclick="event.stopPropagation()" class="block w-full py-2.5 bg-stone-900 hover:bg-orange-700 text-white text-center text-sm font-bold rounded transition-colors">
+                            원본 자료 보기 →
+                        </a>
+                    </div>
+
+                    <div class="mt-4 flex justify-center text-stone-300 group-hover:text-orange-500 transition-colors" id="hint-${item.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                `;
+                cardsContainer.appendChild(card);
+            });
+        }
+
+        function renderReferences() {
+            const container = document.getElementById('references-list');
+            const list = document.createElement('ul');
+            list.className = "grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4";
+            
+            trendData.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <a href="${item.link}" target="_blank" class="flex items-center text-sm text-stone-600 hover:text-orange-600 transition-colors group">
+                        <span class="w-1.5 h-1.5 rounded-full bg-stone-300 group-hover:bg-orange-500 mr-3 transition-colors"></span>
+                        <span class="font-bold mr-2">[${item.source}]</span>
+                        <span class="truncate border-b border-transparent group-hover:border-orange-200">${item.title}</span>
+                    </a>
+                `;
+                list.appendChild(li);
+            });
+            container.appendChild(list);
+        }
+
+        function toggleCard(id) {
+            const detail = document.getElementById(`detail-${id}`);
+            const hint = document.getElementById(`hint-${id}`);
+            const card = document.getElementById(`card-${id}`);
+
+            if (detail.classList.contains('hidden')) {
+                detail.classList.remove('hidden');
+                hint.classList.add('hidden');
+                card.classList.add('card-active');
+            } else {
+                detail.classList.add('hidden');
+                hint.classList.remove('hidden');
+                card.classList.remove('card-active');
+            }
+        }
+
+        function switchInsight(insightId) {
+            document.querySelectorAll('.insight-panel').forEach(el => el.classList.add('hidden'));
+            
+            const selectedPanel = document.getElementById(insightId);
+            selectedPanel.classList.remove('hidden');
+            selectedPanel.classList.remove('animate-fade-in-up'); 
+            void selectedPanel.offsetWidth;
+            selectedPanel.classList.add('animate-fade-in-up');
+
+            document.querySelectorAll('.insight-card').forEach(card => {
+                card.classList.remove('border-orange-500', 'shadow-lg', 'scale-105');
+                card.classList.add('border-transparent');
+                card.querySelector('.absolute.bottom-0').classList.remove('scale-x-100');
+                card.querySelector('.absolute.bottom-0').classList.add('scale-x-0');
+            });
+
+            const activeCard = document.getElementById('nav-' + insightId);
+            activeCard.classList.remove('border-transparent');
+            activeCard.classList.add('border-orange-500', 'shadow-lg', 'scale-105');
+            activeCard.querySelector('.absolute.bottom-0').classList.add('scale-x-100');
+        }
+
+        function initCharts() {
+            const ctxHex = document.getElementById('hexRadarChart').getContext('2d');
+            new Chart(ctxHex, {
+                type: 'radar',
+                data: {
+                    labels: ['외모', '학력', '자산', '성격', '직업', '집안'],
+                    datasets: [{
+                        label: '청년이 느끼는 압박 강도',
+                        data: [9, 8, 10, 7, 9, 8],
+                        backgroundColor: 'rgba(249, 115, 22, 0.2)',
+                        borderColor: 'rgba(249, 115, 22, 1)',
+                        pointBackgroundColor: 'rgba(249, 115, 22, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#e5e5e5' },
+                            grid: { color: '#e5e5e5' },
+                            pointLabels: {
+                                font: { family: "'Noto Sans KR', sans-serif", size: 12, weight: '600' },
+                                color: '#44403c'
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            const canvas = document.getElementById('wordCloudCanvas');
+            const ctx = canvas.getContext('2d');
+            const tooltip = document.getElementById('cloud-tooltip');
+            let width, height;
+            let drawnWords = [];
+
+            const wordData = [
+                { text: "침묵", weight: 8, color: "#dc2626", type: "행동" },
+                { text: "외면", weight: 7, color: "#dc2626", type: "행동" },
+                { text: "단절", weight: 9, color: "#dc2626", type: "행동" },
+                { text: "잠적", weight: 6, color: "#dc2626", type: "행동" },
+                { text: "스펙쌓기", weight: 8, color: "#dc2626", type: "행동" },
+                { text: "투자", weight: 7, color: "#dc2626", type: "행동" },
+                { text: "손절", weight: 7, color: "#dc2626", type: "행동" },
+                { text: "명상", weight: 6, color: "#dc2626", type: "행동" },
+                { text: "로그아웃", weight: 5, color: "#dc2626", type: "행동" },
+                { text: "짠테크", weight: 9, color: "#dc2626", type: "행동" },
+                { text: "멍때리기", weight: 6, color: "#dc2626", type: "행동" },
+                
+                { text: "내삶", weight: 10, color: "#2563eb", type: "가치" },
+                { text: "실리", weight: 8, color: "#2563eb", type: "가치" },
+                { text: "안전", weight: 9, color: "#2563eb", type: "가치" },
+                { text: "생존", weight: 10, color: "#2563eb", type: "가치" },
+                { text: "공정", weight: 9, color: "#2563eb", type: "가치" },
+                { text: "완벽", weight: 8, color: "#2563eb", type: "가치" },
+                { text: "효율", weight: 7, color: "#2563eb", type: "가치" },
+                { text: "가성비", weight: 8, color: "#2563eb", type: "가치" },
+                
+                { text: "냉소", weight: 7, color: "#d97706", type: "감정" },
+                { text: "무기력", weight: 9, color: "#d97706", type: "감정" },
+                { text: "불안", weight: 10, color: "#d97706", type: "감정" },
+                { text: "박탈감", weight: 9, color: "#d97706", type: "감정" },
+                { text: "분노", weight: 8, color: "#d97706", type: "감정" },
+                { text: "강박", weight: 7, color: "#d97706", type: "감정" },
+                { text: "외로움", weight: 6, color: "#d97706", type: "감정" },
+                { text: "편안함", weight: 5, color: "#d97706", type: "감정" },
+                { text: "지침", weight: 7, color: "#d97706", type: "감정" }
+            ];
+
+            function resize() {
+                const container = canvas.parentElement;
+                width = container.clientWidth;
+                height = container.clientHeight;
+                canvas.width = width * window.devicePixelRatio;
+                canvas.height = height * window.devicePixelRatio;
+                ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+                drawCloud();
+            }
+
+            function drawCloud() {
+                ctx.clearRect(0, 0, width, height);
+                drawnWords = [];
+                wordData.sort((a, b) => b.weight - a.weight);
+
+                wordData.forEach(word => {
+                    const fontSize = 18 + (word.weight * 3);
+                    ctx.font = `bold ${fontSize}px 'Noto Sans KR'`;
+                    ctx.textBaseline = "middle";
+                    ctx.textAlign = "center";
+                    
+                    const textWidth = ctx.measureText(word.text).width;
+                    const textHeight = fontSize;
+
+                    let placed = false;
+                    let attempt = 0;
+                    let angle = 0;
+                    let radius = 0;
+                    const centerX = width / 2;
+                    const centerY = height / 2;
+
+                    while (!placed && attempt < 300) {
+                        const x = centerX + radius * Math.cos(angle);
+                        const y = centerY + radius * Math.sin(angle);
+
+                        if (x - textWidth / 2 > 0 && x + textWidth / 2 < width &&
+                            y - textHeight / 2 > 0 && y + textHeight / 2 < height) {
+                            
+                            let collision = false;
+                            for (const drawn of drawnWords) {
+                                if (rectIntersect(
+                                    x - textWidth / 2, y - textHeight / 2, textWidth, textHeight,
+                                    drawn.x - drawn.w / 2, drawn.y - drawn.h / 2, drawn.w, drawn.h
+                                )) {
+                                    collision = true;
+                                    break;
+                                }
+                            }
+
+                            if (!collision) {
+                                ctx.fillStyle = word.color;
+                                ctx.fillText(word.text, x, y);
+                                drawnWords.push({ 
+                                    x, y, w: textWidth + 10, h: textHeight + 10, 
+                                    text: word.text, color: word.color, type: word.type 
+                                });
+                                placed = true;
+                            }
+                        }
+                        angle += 0.5;
+                        radius += 2;
+                        attempt++;
+                    }
+                });
+            }
+
+            function rectIntersect(x1, y1, w1, h1, x2, y2, w2, h2) {
+                return x2 < x1 + w1 && x2 + w2 > x1 && y2 < y1 + h1 && y2 + h2 > y1;
+            }
+
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                let found = false;
+
+                for (const word of drawnWords) {
+                    if (mouseX >= word.x - word.w / 2 && mouseX <= word.x + word.w / 2 &&
+                        mouseY >= word.y - word.h / 2 && mouseY <= word.y + word.h / 2) {
+                        
+                        tooltip.style.left = (e.clientX + 10) + 'px';
+                        tooltip.style.top = (e.clientY + 10) + 'px';
+                        // Enhanced Tooltip showing Category
+                        tooltip.innerHTML = `
+                            <div class="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">분류: ${word.type}</div>
+                            <div class="text-sm font-bold" style="color:${word.color}">${word.text}</div>
+                        `;
+                        tooltip.classList.remove('hidden');
+                        canvas.style.cursor = 'pointer';
+                        
+                        ctx.clearRect(0, 0, width, height);
+                        drawnWords.forEach(dw => {
+                            ctx.font = `bold ${dw.h - 10}px 'Noto Sans KR'`;
+                            ctx.textBaseline = "middle";
+                            ctx.textAlign = "center";
+                            // Dim others
+                            ctx.fillStyle = (dw.text === word.text) ? dw.color : '#e5e5e5';
+                            ctx.fillText(dw.text, dw.x, dw.y);
+                        });
+                        
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    tooltip.classList.add('hidden');
+                    canvas.style.cursor = 'default';
+                    ctx.clearRect(0, 0, width, height);
+                    drawnWords.forEach(dw => {
+                        ctx.font = `bold ${dw.h - 10}px 'Noto Sans KR'`;
+                        ctx.textBaseline = "middle";
+                        ctx.textAlign = "center";
+                        ctx.fillStyle = dw.color;
+                        ctx.fillText(dw.text, dw.x, dw.y);
+                    });
+                }
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+                tooltip.classList.add('hidden');
+                drawCloud();
+            });
+
+            window.addEventListener('resize', resize);
+            resize(); 
+        }
+
+        const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
+        new Chart(sentimentCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Negative', 'Positive/Neutral'],
+                datasets: [{
+                    data: [82, 18],
+                    backgroundColor: ['#ef4444', '#e5e7eb'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                animation: { animateScale: true }
+            }
+        });
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-stone-800', 'text-white');
+                    b.classList.add('bg-white', 'text-stone-600');
+                });
+                btn.classList.remove('bg-white', 'text-stone-600');
+                btn.classList.add('bg-stone-800', 'text-white');
+                renderCards(btn.dataset.filter);
+            });
+        });
+
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCards('all');
+            initCharts();
+            switchInsight('insight1');
+            renderReferences();
+        });
+
+    </script>
+</body>
+</html>
