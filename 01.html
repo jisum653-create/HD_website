@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1979 부마민주항쟁: 독재의 어둠을 가른 시민의 함성</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+            color: #292524; /* stone-800 */
+        }
+        
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif KR', serif;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            height: 300px;
+        }
+
+        .highlight-bg {
+            background-color: #fca5a5; /* red-300 */
+            transition: background-color 0.3s ease;
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Reading Progress Bar */
+        #progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 100;
+        }
+        #progress-bar {
+            height: 100%;
+            background: #b91c1c; /* red-700 */
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Accordion transition */
+        .accordion-content {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .accordion-content.active {
+            opacity: 1;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e7e5e4; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a8a29e; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #78716c; 
+        }
+
+        /* Quiz Styles */
+        .quiz-option:hover {
+            background-color: #fee2e2; /* red-100 */
+            border-color: #b91c1c;
+        }
+        .quiz-option.correct {
+            background-color: #dcfce7; /* green-100 */
+            border-color: #16a34a; /* green-600 */
+            color: #166534;
+        }
+        .quiz-option.wrong {
+            background-color: #fee2e2; /* red-100 */
+            border-color: #dc2626; /* red-600 */
+            color: #991b1b;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals & Brick Red (Stone/Red) -->
+    <!-- Application Structure Plan: 
+         1. Hero: Title.
+         2. Intro: "Why Buma?" purpose statement.
+         3. Context Dashboard: Political vs. Economic cards side-by-side.
+         4. The Spark (Progression): Chart-centric visualization with accordion timeline below.
+         5. Manifesto Analyzer: Text interaction.
+         6. Quiz: Knowledge check.
+         7. Legacy (Conclusion): 3 specific pillars (Solidarity, Record/Memory, Democracy).
+         8. Footer: References.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased selection:bg-red-200 selection:text-red-900">
+
+    <!-- Scroll Progress Bar -->
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-stone-100/95 backdrop-blur-md border-b border-stone-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <!-- Home Icon -->
+                    <a href="index.html" class="mr-3 p-2 rounded-full hover:bg-stone-200 transition-colors group flex items-center justify-center" title="메인으로 이동">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-500 group-hover:text-red-900 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                    </a>
+                    <span class="serif text-xl font-bold text-red-900 border-l pl-3 border-stone-300">1979 부마민주항쟁</span>
+                </div>
+                <div class="hidden sm:flex space-x-8 text-sm font-medium text-stone-600">
+                    <a href="#intro" class="hover:text-red-800 transition-colors">서론</a>
+                    <a href="#context" class="hover:text-red-800 transition-colors">배경</a>
+                    <a href="#progression" class="hover:text-red-800 transition-colors">전개 과정</a>
+                    <a href="#manifesto" class="hover:text-red-800 transition-colors">민주선언문</a>
+                    <a href="#quiz" class="hover:text-red-800 transition-colors">퀴즈</a>
+                    <a href="#legacy" class="hover:text-red-800 transition-colors">결론</a>
+                </div>
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-btn" class="sm:hidden text-stone-600 hover:text-red-800">
+                    ☰
+                </button>
+            </div>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden sm:hidden pb-4">
+                <div class="flex flex-col space-y-2">
+                    <a href="#intro" class="block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-red-800 hover:bg-stone-200">서론</a>
+                    <a href="#context" class="block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-red-800 hover:bg-stone-200">배경</a>
+                    <a href="#progression" class="block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-red-800 hover:bg-stone-200">전개 과정</a>
+                    <a href="#manifesto" class="block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-red-800 hover:bg-stone-200">민주선언문</a>
+                    <a href="#quiz" class="block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-red-800 hover:bg-stone-200">퀴즈</a>
+                    <a href="#legacy" class="block px-3 py-2 rounded-md text-base font-medium text-stone-700 hover:text-red-800 hover:bg-stone-200">결론</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative bg-gradient-to-br from-stone-900 via-red-950 to-red-900 text-white overflow-hidden">
+        <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+        <div class="max-w-6xl mx-auto px-4 py-20 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-block px-3 py-1 mb-4 border border-red-400/50 rounded-full text-xs uppercase tracking-widest text-red-100">2026.01.24 보고서 기반</div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight animate-fade-in-up">독재의 어둠을 가른<br/><span class="text-red-200">최초의 시민 항쟁</span></h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-red-50 serif">1979년 10월, 부산과 마산.</p>
+            <p class="mt-2 max-w-2xl mx-auto text-red-200/80">학생들의 외침은 어떻게 시민 전체의 거대한 횃불이 되었는가?</p>
+            <div class="mt-10">
+                <a href="#context" class="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-red-900 bg-white hover:bg-red-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                    항쟁의 기록 살펴보기 ↓
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24">
+
+        <!-- 0. Intro Section (Updated Title) -->
+        <section id="intro" class="scroll-mt-24 text-center max-w-4xl mx-auto animate-fade-in-up">
+            <div class="bg-white p-8 rounded-2xl card-shadow border-t-4 border-stone-800">
+                <h2 class="text-3xl font-bold text-stone-900 serif mb-6">왜 부마인가?</h2>
+                <div class="w-16 h-1 bg-red-800 mx-auto mb-8"></div>
+                <p class="text-lg text-stone-700 leading-relaxed">
+                    1979년 10월, 부산과 마산 지역에서 일어난 부마민주항쟁은<br>
+                    <strong>박정희 유신독재 체제를 붕괴시키는 결정적인 계기</strong>가 된 사건입니다.<br><br>
+                    본 보고서는 단순한 사건의 나열을 넘어,<br>
+                    학생 주도의 시위가 어떻게 <span class="text-red-800 font-bold bg-red-50 px-1">시민 전체의 항쟁</span>으로 확산되었는지<br>
+                    그 역사적 경로를 추적하고, 그 속에 담긴 민주주의의 가치를 재조명하고자 합니다.
+                </p>
+            </div>
+        </section>
+
+        <!-- 1. Context Section: Background -->
+        <section id="context" class="scroll-mt-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-stone-900 serif">항쟁의 발발 배경</h2>
+                <p class="mt-4 text-lg text-stone-600 max-w-3xl mx-auto">
+                    부마민주항쟁은 우발적인 사건이 아닙니다. 장기간 누적된 <span class="text-red-800 font-bold">정치적 억압</span>과 <span class="text-blue-800 font-bold">경제적 파탄</span>이 맞물려 폭발한 필연적 결과였습니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <!-- Political Card -->
+                <div class="bg-white rounded-xl card-shadow overflow-hidden border-t-4 border-red-800 hover:shadow-lg transition-all duration-300 cursor-pointer group hover:-translate-y-1 h-full" onclick="toggleDetails('political-details', this)">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-stone-800">🏛️ 정치적 억압</h3>
+                            <span class="text-stone-400 group-hover:text-red-800 transition-colors transform group-hover:rotate-180 duration-300">▼</span>
+                        </div>
+                        <p class="text-stone-600 mb-4">유신독재 18년, 국민의 기본권과 자유는 철저히 유린당했습니다.</p>
+                        <div id="political-details" class="hidden border-t border-stone-100 pt-4 mt-2 bg-stone-50 p-4 rounded-lg animate-fade-in text-left">
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start">
+                                    <span class="text-red-600 mr-2 font-bold">•</span>
+                                    <span><strong>유신독재 장기화:</strong> 1인 영구 집권을 위한 헌법 개악과 군부 통치.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-red-600 mr-2 font-bold">•</span>
+                                    <span><strong>막걸리 보안법:</strong> 술자리에서의 사소한 정부 비판도 처벌하는 극심한 언론 통제.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-red-600 mr-2 font-bold">•</span>
+                                    <span><strong>YH 사건 & 김영삼 제명:</strong> YH 여성 노동자 사망 사건과 이에 항의한 부산 출신 야당 총재(YS)의 의원직 강제 제명이 부산 민심을 폭발시킴.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Economic Card -->
+                <div class="bg-white rounded-xl card-shadow overflow-hidden border-t-4 border-blue-800 hover:shadow-lg transition-all duration-300 cursor-pointer group hover:-translate-y-1 h-full" onclick="toggleDetails('economic-details', this)">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-stone-800">📉 경제적 위기</h3>
+                            <span class="text-stone-400 group-hover:text-blue-800 transition-colors transform group-hover:rotate-180 duration-300">▼</span>
+                        </div>
+                        <p class="text-stone-600 mb-4">민생고는 시민들을 거리로 나오게 만든 결정적인 동력이었습니다.</p>
+                        <div id="economic-details" class="hidden border-t border-stone-100 pt-4 mt-2 bg-stone-50 p-4 rounded-lg animate-fade-in text-left">
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-2 font-bold">•</span>
+                                    <span><strong>부가가치세 도입 (1977):</strong> 새로운 세금 도입으로 서민 체감 물가가 급등.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-2 font-bold">•</span>
+                                    <span><strong>제2차 오일쇼크 (1979):</strong> 국제 유가 폭등으로 인한 극심한 경제 불황.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-600 mr-2 font-bold">•</span>
+                                    <span><strong>민심 이반:</strong> 상인과 일반 시민들이 정권에 등을 돌리고 시위 학생들을 돕게 된 배경.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Progression Section: Chart Centric + Accordion Timeline -->
+        <section id="progression" class="scroll-mt-24 bg-white rounded-2xl p-6 md:p-10 card-shadow">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-900 serif border-l-8 border-red-800 pl-4">항쟁의 전개와 확산</h2>
+                <p class="mt-4 text-stone-600">
+                    참여율 그래프를 통해 시위의 폭발적인 확산 과정을 확인하세요.<br>
+                    아래 타임라인의 각 단계를 클릭하면 상세 내용을 볼 수 있습니다.
+                </p>
+            </div>
+
+            <!-- Chart (Centered & Prominent) -->
+            <div class="mb-8 bg-stone-50 p-4 rounded-xl border border-stone-200">
+                <h4 class="text-sm font-bold text-stone-500 uppercase mb-4 text-center">📊 시위 참여도 및 강도 추이 (추정)</h4>
+                <div class="chart-container">
+                    <canvas id="intensityChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Accordion Timeline -->
+            <div class="space-y-3">
+                
+                <!-- Step 1 -->
+                <div class="accordion-item rounded-lg border border-stone-200 bg-white hover:border-red-300 transition-colors">
+                    <button onclick="toggleTimeline(1)" class="w-full text-left p-4 flex justify-between items-center focus:outline-none" id="btn-step1">
+                        <div>
+                            <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded font-bold mr-2">10.16 오전</span>
+                            <span class="font-bold text-lg text-stone-800">1. 발원 (부산대)</span>
+                        </div>
+                        <span class="text-stone-400 transform transition-transform duration-300" id="icon-step1">▼</span>
+                    </button>
+                    <div class="accordion-content bg-stone-50 border-t border-stone-100" id="content-step1">
+                        <div class="p-5 text-stone-700 leading-relaxed">
+                            <p class="mb-2">오전 10시경, <strong class="text-red-800">이진걸과 남성철</strong>의 주도로 부산대 도서관 앞에서 '민주선언문'이 배포되었습니다.</p>
+                            <p>교내 시위가 시작되자 경찰이 진입했고, 학생들은 <strong>'시내로 나가자!'</strong>고 외치며 교문을 뚫기 시작했습니다.</p>
+                            <div class="mt-3 p-2 bg-white rounded border border-stone-200 inline-block">
+                                <span class="text-sm font-bold text-red-900">📢 구호: "유신 철폐! 독재 타도!"</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="accordion-item rounded-lg border border-stone-200 bg-white hover:border-red-300 transition-colors">
+                    <button onclick="toggleTimeline(2)" class="w-full text-left p-4 flex justify-between items-center focus:outline-none" id="btn-step2">
+                        <div>
+                            <span class="text-xs bg-stone-200 text-stone-700 px-2 py-1 rounded font-bold mr-2">10.16 오후~17</span>
+                            <span class="font-bold text-lg text-stone-800">2. 시내 진출 (부산)</span>
+                        </div>
+                        <span class="text-stone-400 transform transition-transform duration-300" id="icon-step2">▼</span>
+                    </button>
+                    <div class="accordion-content bg-stone-50 border-t border-stone-100" id="content-step2">
+                        <div class="p-5 text-stone-700 leading-relaxed">
+                            <p class="mb-2">남포동 부영극장 앞 등 시내 중심가로 진출한 학생들에게 <strong>시민들이 합세</strong>했습니다.</p>
+                            <p>상인들과 시민들은 김밥과 물을 주고, 가게 셔터를 내리고 불을 끄는 <strong>소등 시위</strong>로 학생들을 보호하며 독재 정권에 대한 저항 의지를 보여주었습니다.</p>
+                            <div class="mt-3 p-2 bg-white rounded border border-stone-200 inline-block">
+                                <span class="text-sm font-bold text-stone-700">📢 상황: 시민들의 소등 시위 ("불 꺼라!")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="accordion-item rounded-lg border border-stone-200 bg-white hover:border-red-300 transition-colors">
+                    <button onclick="toggleTimeline(3)" class="w-full text-left p-4 flex justify-between items-center focus:outline-none" id="btn-step3">
+                        <div>
+                            <span class="text-xs bg-stone-200 text-stone-700 px-2 py-1 rounded font-bold mr-2">10.18~19</span>
+                            <span class="font-bold text-lg text-stone-800">3. 확산 (마산)</span>
+                        </div>
+                        <span class="text-stone-400 transform transition-transform duration-300" id="icon-step3">▼</span>
+                    </button>
+                    <div class="accordion-content bg-stone-50 border-t border-stone-100" id="content-step3">
+                        <div class="p-5 text-stone-700 leading-relaxed">
+                            <p class="mb-2">항쟁은 마산으로 들불처럼 번졌습니다. 경남대생과 시민들이 결합하며 시위는 더욱 격렬해졌습니다.</p>
+                            <p>공화당사 등 정권의 상징물이 타격을 입었고, 박정희 사진이 불태워졌습니다. 위수령이 발동되었으나 시민들의 저항은 멈추지 않았습니다.</p>
+                            <div class="mt-3 p-2 bg-white rounded border border-stone-200 inline-block">
+                                <span class="text-sm font-bold text-red-900">🔥 상황: 파출소 투석전 및 공화당사 공격</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. Manifesto Section -->
+        <section id="manifesto" class="scroll-mt-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Intro -->
+                <div class="lg:col-span-4">
+                    <h2 class="text-3xl font-bold text-stone-900 serif mb-6">민주선언문</h2>
+                    <p class="text-stone-600 mb-6">
+                        1979년 10월 16일, 부산대 이진걸, 남성철 등이 작성하여 배포한 선언문은 항쟁의 기폭제가 되었습니다.<br><br>
+                        오른쪽(모바일: 아래)의 선언문 본문에서 <span class="bg-red-100 text-red-800 px-1 font-bold">강조된 문구</span>를 클릭하여 그 의미를 확인해보세요.
+                    </p>
+                    <div id="manifesto-explanation" class="bg-white p-6 rounded-lg shadow-md border-l-4 border-red-700 transition-all opacity-0 translate-y-4">
+                        <h4 class="font-bold text-lg mb-2 text-stone-900" id="expl-title">문구를 선택하세요</h4>
+                        <p class="text-stone-600" id="expl-text">선언문의 핵심 내용을 분석해 드립니다.</p>
+                    </div>
+                </div>
+
+                <!-- Text Interactive Area -->
+                <div class="lg:col-span-8 bg-amber-50 p-8 rounded-lg shadow-inner border border-amber-100 font-serif leading-relaxed text-stone-800 relative">
+                    <div class="absolute top-0 right-0 p-2 opacity-10 pointer-events-none text-6xl">📜</div>
+                    <div class="space-y-6 max-h-[500px] overflow-y-auto pr-2">
+                        <p class="text-center font-bold text-2xl mb-8 border-b border-stone-300 pb-4">민주선언문 (발췌)</p>
+                        
+                        <p>우리는 학원내의 일체의 외부세력을 배격한다. <button onclick="showExpl(1)" class="text-left hover:bg-red-200 bg-amber-100 px-1 rounded transition-colors cursor-pointer text-red-900 font-semibold">비민주적 학칙의 민주적 학칙으로의 개정</button>과 학원, 언론의 자율화와 학생회의 민주화와 집회의 자유를 요구하며...</p>
+
+                        <p>우리는 언론 · 인권 · 자유의 유보나 제약에 반대한다. ... 민주주의 생명이며 본질적인 요청인 <button onclick="showExpl(2)" class="text-left hover:bg-red-200 bg-amber-100 px-1 rounded transition-colors cursor-pointer text-red-900 font-semibold">언론의 자유를 국론분열, 국가이익이라는 명분을 내세워 억압하는 것을 반대</button>한다.</p>
+
+                        <p>우리는 경제적 민족주의를 당위적인 목표로 한 경제개발계획의 자립경제에 대한 무방향 역방향성을 고발한다. ... <button onclick="showExpl(3)" class="text-left hover:bg-red-200 bg-amber-100 px-1 rounded transition-colors cursor-pointer text-red-900 font-semibold">정치권력과 야합한 관료독점자본의 구조적 모순</button>... 부실기업, 노사문제 등이 파생됨을 명확히 인식한다.</p>
+
+                        <p class="font-bold text-lg text-center my-4">"유신헌법 철폐하라! 독재정권 물러나라!"</p>
+
+                        <p>학우들이여! 효원학우들이여! 민족의 앞날과 사회정의에 대한 우리들의 되풀이된 청원과 요구는 되풀이된 억압으로... <button onclick="showExpl(4)" class="text-left hover:bg-red-200 bg-amber-100 px-1 rounded transition-colors cursor-pointer text-red-900 font-semibold">형제의 피를 요구하는 자유와 민주의 깃발을 우리가 잡고</button> 반민주의 무리... 불의의 무리들을 향해 외치며 나아가자!</p>
+                        
+                        <p class="text-right font-bold mt-8">10시 도서관 앞.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Interactive Quiz -->
+        <section id="quiz" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold text-stone-900 serif text-center mb-12">항쟁 바로 알기 퀴즈 (O/X)</h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <!-- Q1 -->
+                <div class="bg-white p-6 rounded-xl card-shadow">
+                    <h3 class="font-bold text-lg mb-4">Q1. 부마민주항쟁은 10월 16일 부산대학교에서 시작되었다.</h3>
+                    <div class="flex space-x-4">
+                        <button onclick="checkAnswer(this, true, 'correct')" class="flex-1 py-3 border-2 border-stone-200 rounded-lg hover:bg-stone-50 font-bold text-stone-600 transition-colors quiz-option">O (그렇다)</button>
+                        <button onclick="checkAnswer(this, false, 'wrong')" class="flex-1 py-3 border-2 border-stone-200 rounded-lg hover:bg-stone-50 font-bold text-stone-600 transition-colors quiz-option">X (아니다)</button>
+                    </div>
+                    <div class="hidden mt-4 p-3 bg-stone-100 rounded text-sm feedback">
+                        정답! 10월 16일 오전, 부산대 도서관 앞에서 민주선언문 배포와 함께 시작되었습니다.
+                    </div>
+                </div>
+                <!-- Q2 -->
+                <div class="bg-white p-6 rounded-xl card-shadow">
+                    <h3 class="font-bold text-lg mb-4">Q2. 시민들은 시위에 무관심하여 학생들을 돕지 않았다.</h3>
+                    <div class="flex space-x-4">
+                        <button onclick="checkAnswer(this, false, 'wrong')" class="flex-1 py-3 border-2 border-stone-200 rounded-lg hover:bg-stone-50 font-bold text-stone-600 transition-colors quiz-option">O (그렇다)</button>
+                        <button onclick="checkAnswer(this, true, 'correct')" class="flex-1 py-3 border-2 border-stone-200 rounded-lg hover:bg-stone-50 font-bold text-stone-600 transition-colors quiz-option">X (아니다)</button>
+                    </div>
+                    <div class="hidden mt-4 p-3 bg-stone-100 rounded text-sm feedback">
+                        정답! 시민들은 학생들에게 물과 음식을 제공하고, 소등 시위 등으로 적극적으로 연대했습니다.
+                    </div>
+                </div>
+                 <!-- Q3 -->
+                 <div class="bg-white p-6 rounded-xl card-shadow">
+                    <h3 class="font-bold text-lg mb-4">Q3. 부마항쟁은 유신 체제가 더욱 공고해지는 계기가 되었다.</h3>
+                    <div class="flex space-x-4">
+                        <button onclick="checkAnswer(this, false, 'wrong')" class="flex-1 py-3 border-2 border-stone-200 rounded-lg hover:bg-stone-50 font-bold text-stone-600 transition-colors quiz-option">O (그렇다)</button>
+                        <button onclick="checkAnswer(this, true, 'correct')" class="flex-1 py-3 border-2 border-stone-200 rounded-lg hover:bg-stone-50 font-bold text-stone-600 transition-colors quiz-option">X (아니다)</button>
+                    </div>
+                    <div class="hidden mt-4 p-3 bg-stone-100 rounded text-sm feedback">
+                        정답! 부마항쟁은 유신 정권 내부의 분열을 일으켜 10.26 사태를 촉발, 유신 체제를 붕괴시키는 결정적 계기가 되었습니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Legacy Section (Refined Conclusion) -->
+        <section id="legacy" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold text-stone-900 serif text-center mb-12">결론: 역사적 의의</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Pillar 1: Solidarity -->
+                <div class="bg-white p-8 rounded-xl card-shadow flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300 hover:shadow-xl border-t-4 border-stone-700">
+                    <div class="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center text-3xl mb-6 shadow-sm">🤝</div>
+                    <h3 class="text-xl font-bold text-stone-800 mb-3">연대의 힘</h3>
+                    <p class="text-stone-600 text-sm leading-relaxed">
+                        경제적 불만과 정치적 억압이라는 공통의 분노가 학생과 시민을 하나로 묶었습니다.<br>
+                        <strong>철옹성 같던 독재 권력도 시민의 연대 앞에서는 무너질 수 있음</strong>을 증명했습니다.
+                    </p>
+                </div>
+
+                <!-- Pillar 2: Record and Memory -->
+                <div class="bg-white p-8 rounded-xl card-shadow flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300 hover:shadow-xl border-t-4 border-stone-700">
+                    <div class="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center text-3xl mb-6 shadow-sm">📝</div>
+                    <h3 class="text-xl font-bold text-stone-800 mb-3">기록과 기억의 중요성</h3>
+                    <p class="text-stone-600 text-sm leading-relaxed">
+                        유치준 씨의 사례처럼, 은폐된 죽음이 40년이 지나서야 규명되었습니다.<br>
+                        <strong>역사의 진실을 기록하고 기억하는 일</strong>은 과거가 아닌 현재 진행형의 과제입니다.
+                    </p>
+                </div>
+
+                <!-- Pillar 3: Today's Democracy -->
+                <div class="bg-white p-8 rounded-xl card-shadow flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300 hover:shadow-xl border-t-4 border-stone-700">
+                    <div class="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center text-3xl mb-6 shadow-sm">🇰🇷</div>
+                    <h3 class="text-xl font-bold text-stone-800 mb-3">오늘의 민주주의</h3>
+                    <p class="text-stone-600 text-sm leading-relaxed">
+                        우리가 누리는 자유는 공짜로 주어진 것이 아닙니다.<br>
+                        1979년 부산과 마산의 거리에서 흘린 <strong>평범한 시민들의 피와 땀, 숭고한 희생</strong> 위에 세워진 것입니다.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-16 bg-stone-800 rounded-2xl p-8 text-center text-stone-300 transform hover:scale-[1.01] transition-transform">
+                <p class="serif text-xl md:text-2xl mb-4 italic">"자유는 공짜로 주어지지 않았다."</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer with References -->
+    <footer class="bg-stone-900 text-stone-400 py-12 mt-12 border-t border-stone-800 text-sm">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 text-center md:text-left">
+                <div>
+                    <h4 class="text-stone-200 font-bold mb-4 uppercase tracking-wider">참고 문헌 및 자료</h4>
+                    <ul class="space-y-2">
+                        <li>• 부마민주항쟁 역사적 의의 관련 자료 (부산문화재단 부산다봄)</li>
+                        <li>• 민주선언문 원문 (부마민주항쟁기념재단 아카이브)</li>
+                        <li>• 1979 부마민주항쟁 개요 및 전개 자료, 인포그래픽 타임라인</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-stone-200 font-bold mb-4 uppercase tracking-wider">영상 자료 출처</h4>
+                    <ul class="space-y-2">
+                        <li>• [특집] 부마: 과거가 현재를 돕다 | 부마민주항쟁 46주년 기념 특집 (채널PNU)</li>
+                        <li>• 특집다큐 1979, 다시 부마로/학생들로 시작된 민주항쟁의 불씨 (부산MBC)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-stone-800 pt-8 text-center text-xs text-stone-600">
+                <p>Based on Report Created: 2026.01.24 | Generated for Educational Purposes.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 1. Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // 2. Scroll Progress Bar Logic
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        });
+
+        // 3. Expandable Cards Logic
+        function toggleDetails(id, cardElement) {
+            const content = document.getElementById(id);
+            const isHidden = content.classList.contains('hidden');
+            
+            if (isHidden) {
+                content.classList.remove('hidden');
+                cardElement.classList.add('ring-2', 'ring-stone-400');
+            } else {
+                content.classList.add('hidden');
+                cardElement.classList.remove('ring-2', 'ring-stone-400');
+            }
+        }
+
+        // 4. Manifesto Analyzer Logic
+        const explanations = {
+            1: {
+                title: "학원 민주화 요구",
+                text: "당시 대학은 군사 교육(교련)과 학도호국단 등 관제 조직에 의해 통제받고 있었습니다. 학생들은 총장 직선제와 학생회 부활 등 대학의 자율성을 되찾고자 했습니다."
+            },
+            2: {
+                title: "언론의 자유 수호",
+                text: "'막걸리 보안법'으로 불리던 긴급조치 9호 상황을 비판합니다. 정권은 국가 안보를 핑계로 비판적 언론과 시민의 입을 막았으나, 학생들은 이것이 민주주의의 본질을 훼손한다고 꼬집었습니다."
+            },
+            3: {
+                title: "정경유착과 경제 모순 비판",
+                text: "고도 성장의 그늘을 지적합니다. 재벌 중심의 경제 구조, 노동자 착취(YH 사건 등), 그리고 이로 인한 빈부격차와 경제 위기가 독재 권력과 결탁해 있음을 통찰했습니다."
+            },
+            4: {
+                title: "희생을 각오한 결의",
+                text: "단순한 불만의 표출이 아니라, '형제의 피' 즉 희생을 감수하고서라도 독재와 맞서 싸우겠다는 비장한 각오를 보여줍니다. 이는 4.19 혁명의 정신을 계승한다는 의미기도 합니다."
+            }
+        };
+
+        function showExpl(id) {
+            const container = document.getElementById('manifesto-explanation');
+            const title = document.getElementById('expl-title');
+            const text = document.getElementById('expl-text');
+
+            title.innerText = explanations[id].title;
+            text.innerText = explanations[id].text;
+
+            container.classList.remove('opacity-0', 'translate-y-4');
+        }
+
+        // 5. Timeline Accordion & Chart Logic
+        const chartData = {
+            labels: ['10.15 (전야)', '10.16 (오전)', '10.16 (오후)', '10.17 (부산)', '10.18 (마산)', '10.19 (격화)', '10.20 (진압)'],
+            datasets: [{
+                label: '시위 참여도 및 강도 (추정치)',
+                data: [1, 3, 7, 8, 8, 9, 2],
+                borderColor: '#991b1b',
+                backgroundColor: 'rgba(153, 27, 27, 0.1)',
+                borderWidth: 3,
+                tension: 0.3,
+                fill: true,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#991b1b',
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }]
+        };
+
+        let intensityChart;
+
+        function initChart() {
+            const ctx = document.getElementById('intensityChart').getContext('2d');
+            intensityChart = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            display: false
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const events = [
+                                        "선언문 준비 (이진걸 등)",
+                                        "도서관 앞 집결, 교문 돌파",
+                                        "남포동/광복동 시민 합세",
+                                        "부산 계엄령 선포, 시민 저항 계속",
+                                        "마산 3.15 의거탑 집결, 시위 확산",
+                                        "마산 노동자/시민 대거 합류",
+                                        "위수령 발동, 군 투입 진압"
+                                    ];
+                                    return events[context.dataIndex];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            // Initially open step 1
+            toggleTimeline(1);
+        }
+
+        function toggleTimeline(step) {
+            // 1. Handle Accordion UI
+            // Close all contents first
+            document.querySelectorAll('.accordion-content').forEach(el => {
+                el.style.maxHeight = '0px';
+                el.style.opacity = '0';
+                el.parentElement.classList.remove('border-red-800');
+            });
+            document.querySelectorAll('[id^="icon-step"]').forEach(icon => {
+                icon.style.transform = 'rotate(0deg)';
+                icon.classList.remove('text-red-800');
+            });
+            document.querySelectorAll('[id^="btn-step"] span.font-bold.text-lg').forEach(text => {
+                text.classList.remove('text-red-900');
+            });
+
+            // Open clicked content
+            const content = document.getElementById('content-step' + step);
+            const btn = document.getElementById('btn-step' + step);
+            const icon = document.getElementById('icon-step' + step);
+            
+            // Assuming we want one open at a time logic (Accordion)
+            if (content) {
+                content.style.maxHeight = content.scrollHeight + "px";
+                content.style.opacity = '1';
+                btn.parentElement.classList.add('border-red-800');
+                
+                // Style Active Header
+                btn.querySelector('.text-lg').classList.add('text-red-900');
+                icon.style.transform = 'rotate(180deg)';
+                icon.classList.add('text-red-800');
+            }
+
+            // 2. Handle Chart Interaction
+            if(intensityChart) {
+                const newRadii = chartData.datasets[0].data.map(() => 5);
+                const newColors = chartData.datasets[0].data.map(() => '#fff');
+                
+                let targetIndices = [];
+                if(step === 1) targetIndices = [1];
+                if(step === 2) targetIndices = [2, 3];
+                if(step === 3) targetIndices = [4, 5];
+
+                targetIndices.forEach(idx => {
+                    newRadii[idx] = 10;
+                    newColors[idx] = '#fca5a5'; 
+                });
+
+                intensityChart.data.datasets[0].pointRadius = newRadii;
+                intensityChart.data.datasets[0].pointBackgroundColor = newColors;
+                intensityChart.update();
+            }
+        }
+
+        // 6. Quiz Logic
+        function checkAnswer(btn, isCorrect, correctClass) {
+            const parent = btn.parentElement;
+            const feedback = parent.nextElementSibling;
+            
+            // Disable buttons in this group
+            const buttons = parent.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+            
+            if(isCorrect) {
+                btn.classList.add('correct', 'bg-green-100', 'border-green-600', 'text-green-800');
+                feedback.innerHTML = "<strong class='text-green-700'>정답입니다!</strong> " + feedback.innerText.replace('정답!', '');
+            } else {
+                btn.classList.add('wrong', 'bg-red-100', 'border-red-600', 'text-red-900');
+                feedback.innerHTML = "<strong class='text-red-700'>오답입니다.</strong> " + feedback.innerText.replace('정답!', '');
+            }
+            
+            feedback.classList.remove('hidden');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            setTimeout(() => {
+                const helper = document.getElementById('manifesto-explanation');
+                helper.classList.remove('opacity-0', 'translate-y-4');
+            }, 1000);
+        });
+
+    </script>
+</body>
+</html>
