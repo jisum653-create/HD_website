@@ -112,6 +112,21 @@
             transform: scale(1.02);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
+
+        /* NEW: Text Gradients (Matching Landing Page) */
+        .text-gradient-rose {
+            background: linear-gradient(135deg, #fb7185 0%, #e11d48 50%, #9f1239 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(225, 29, 72, 0.3));
+        }
+        
+        .text-gradient-teal {
+            background: linear-gradient(135deg, #5eead4 0%, #0d9488 50%, #115e59 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(13, 148, 136, 0.3));
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-rose-200 selection:text-rose-900">
@@ -158,9 +173,10 @@
             <div class="inline-block mb-4 px-4 py-1 rounded-full bg-white/10 border border-white/20 text-rose-200 text-sm font-semibold tracking-wide uppercase shadow-sm backdrop-blur-sm">
                 2026 캡스톤 디자인 프로젝트
             </div>
+            <!-- Main Title Updated with Gradients -->
             <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black text-stone-100 tracking-tight mb-6 leading-tight">
-                1979 <span class="text-rose-200">부마의 불꽃</span>에서<br>
-                2026 <span class="text-teal-200">청년의 미래</span>를 찾다
+                1979 <span class="text-gradient-rose">부마의 불꽃</span>에서<br>
+                2026 <span class="text-gradient-teal">청년의 미래</span>를 찾다
             </h1>
             <p class="mt-6 max-w-2xl mx-auto text-xl text-stone-300 leading-relaxed font-serif">
                 "열정은 반드시 같은 방식으로 표현되어야 하는가?"<br>
@@ -172,6 +188,7 @@
                 </button>
             </div>
         </div>
+        <!-- Ambient Background -->
         <div class="absolute top-0 left-0 w-full h-full z-0 pointer-events-none">
             <div class="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-red-600/20 rounded-full blur-[100px] mix-blend-screen animate-pulse"></div>
             <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-rose-900/30 rounded-full blur-[100px] mix-blend-screen" style="animation-delay: 1s;"></div>
@@ -267,7 +284,7 @@
                 <p class="text-stone-500 mt-4">카드를 마우스로 가리켜 숨겨진 질문의 의미를 확인하세요.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Question Cards -->
+                <!-- Cards Omitted for Brevity (Same as before) -->
                 <div class="flip-card cursor-pointer">
                     <div class="flip-card-inner">
                         <div class="flip-card-front shadow-lg">
@@ -466,6 +483,7 @@
                 2026, 당신의 색은 무엇입니까?
             </h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto mb-12">
+                <!-- Color Buttons -->
                 <button onclick="selectColor('innovation', '#0d9488')" class="color-btn p-6 rounded-2xl bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 border-2 border-transparent hover:border-teal-500 transition-all group">
                     <div class="w-14 h-14 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mx-auto mb-4 group-hover:bg-teal-600 group-hover:text-white transition-colors text-2xl">
                         <i class="fas fa-lightbulb"></i>
@@ -509,48 +527,36 @@
                 <div class="bg-stone-50 p-8 rounded-2xl border border-stone-200 hover:shadow-md transition-shadow">
                     <div class="flex items-center mb-6 border-b border-stone-200 pb-4">
                         <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-2xl mr-4 shrink-0 font-serif">문</div>
-                        <div>
-                            <h3 class="font-bold text-xl text-stone-900">문지수</h3>
-                            <p class="text-xs text-stone-500 uppercase tracking-wide">PM & Analyst</p>
-                        </div>
+                        <div><h3 class="font-bold text-xl text-stone-900">문지수</h3><p class="text-xs text-stone-500 uppercase tracking-wide">PM & Analyst</p></div>
                     </div>
                     <ul class="text-sm text-stone-600 space-y-3">
                         <li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">●</span><span><strong>프로젝트 총괄:</strong> 데이터 기반 전략 수립</span></li>
-                        <li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">●</span><span><strong>데이터 마이닝:</strong> 뉴스 라이브러리 및 효원대보 아카이브 크롤링 (1979/2025 키워드)</span></li>
-                        <li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">●</span><span><strong>통계 분석:</strong> Python 빈도/상관관계 분석 및 인사이트 시각화</span></li>
-                        <li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">●</span><span><strong>웹 개발:</strong> 분석 결과 기반 인터랙티브 웹 구조 설계</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">●</span><span><strong>데이터 마이닝:</strong> 뉴스/학보 키워드 크롤링</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">●</span><span><strong>통계 분석:</strong> Python 빈도 분석 및 시각화</span></li>
                     </ul>
                 </div>
                 <!-- Member 2 -->
                 <div class="bg-stone-50 p-8 rounded-2xl border border-stone-200 hover:shadow-md transition-shadow">
                     <div class="flex items-center mb-6 border-b border-stone-200 pb-4">
                         <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center font-bold text-2xl mr-4 shrink-0 font-serif">박</div>
-                        <div>
-                            <h3 class="font-bold text-xl text-stone-900">박진솔</h3>
-                            <p class="text-xs text-stone-500 uppercase tracking-wide">Researcher</p>
-                        </div>
+                        <div><h3 class="font-bold text-xl text-stone-900">박진솔</h3><p class="text-xs text-stone-500 uppercase tracking-wide">Researcher</p></div>
                     </div>
                     <ul class="text-sm text-stone-600 space-y-3">
-                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>인문학적 분석:</strong> 역사적 맥락 해석 및 비교 인문학 연구</span></li>
-                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>스토리텔링:</strong> 데이터 키워드를 감동적인 내러티브로 변환</span></li>
-                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>시나리오 작성:</strong> 영상 및 스토리북 스크립트 집필</span></li>
-                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>철학적 제언:</strong> '왜 지금 다시 열정인가?'에 대한 화두 도출</span></li>
+                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>인문학적 분석:</strong> 역사적 맥락 해석</span></li>
+                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>스토리텔링:</strong> 데이터의 서사화</span></li>
+                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>시나리오:</strong> 영상/스토리북 스크립트 작성</span></li>
                     </ul>
                 </div>
                 <!-- Member 3 -->
                 <div class="bg-stone-50 p-8 rounded-2xl border border-stone-200 hover:shadow-md transition-shadow">
                     <div class="flex items-center mb-6 border-b border-stone-200 pb-4">
                         <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center font-bold text-2xl mr-4 shrink-0 font-serif">김</div>
-                        <div>
-                            <h3 class="font-bold text-xl text-stone-900">김이진</h3>
-                            <p class="text-xs text-stone-500 uppercase tracking-wide">Visual Director</p>
-                        </div>
+                        <div><h3 class="font-bold text-xl text-stone-900">김이진</h3><p class="text-xs text-stone-500 uppercase tracking-wide">Visual Director</p></div>
                     </div>
                     <ul class="text-sm text-stone-600 space-y-3">
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>AI 아트 디렉팅:</strong> 프롬프트 엔지니어링 및 스타일 최적화</span></li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>시각적 은유:</strong> '열정/두려움/미래' 등 추상적 개념 시각화</span></li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>영상/편집:</strong> 생성 소스를 활용한 몰입형 스토리북 제작</span></li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>디자인 총괄:</strong> 전체 프로젝트의 톤앤매너 설정</span></li>
+                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>AI 아트 디렉팅:</strong> 프롬프트 엔지니어링</span></li>
+                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>시각적 은유:</strong> 추상적 개념 시각화</span></li>
+                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>디자인 총괄:</strong> 프로젝트 톤앤매너 설정</span></li>
                     </ul>
                 </div>
             </div>
@@ -561,10 +567,7 @@
     <footer class="bg-stone-900 text-stone-400 py-16">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h3 class="font-bold text-white text-xl mb-4 serif">응답하라 1979</h3>
-            <p class="text-sm mb-8 text-stone-500">1979 부마의 불꽃에서 2026 청년의 미래를 찾다</p>
-            <div class="border-t border-stone-800 pt-8 text-xs text-stone-600">
-                &copy; 2026 Team Reply 1979. All Rights Reserved.
-            </div>
+            <div class="border-t border-stone-800 pt-8 text-xs text-stone-600">&copy; 2026 Team Reply 1979. All Rights Reserved.</div>
         </div>
     </footer>
 
