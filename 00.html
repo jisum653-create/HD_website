@@ -173,24 +173,28 @@
             <div class="inline-block mb-4 px-4 py-1 rounded-full bg-white/10 border border-white/20 text-rose-200 text-sm font-semibold tracking-wide uppercase shadow-sm backdrop-blur-sm">
                 2026 캡스톤 디자인 프로젝트
             </div>
-            <!-- Main Title Updated with Gradients -->
-            <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black text-stone-100 tracking-tight mb-6 leading-tight">
-                1979 <span class="text-gradient-rose">부마의 불꽃</span>에서<br>
-                2026 <span class="text-gradient-teal">청년의 미래</span>를 찾다
+            <!-- Main Title (Changed Font to Serif as requested) -->
+            <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold serif text-stone-100 tracking-tight mb-6 leading-tight">
+                1979 <span class="text-rose-200">부마의 불꽃</span>에서<br>
+                2026 <span class="text-rose-200">청년의 미래</span>를 찾다
             </h1>
+            <!-- Subtitle -->
             <p class="mt-6 max-w-2xl mx-auto text-xl text-stone-300 leading-relaxed font-serif">
                 "열정은 반드시 같은 방식으로 표현되어야 하는가?"<br>
                 <span class="text-stone-400 text-base font-sans mt-2 block">AI 데이터 분석을 통해 시대의 불꽃을 다시 밝힙니다.</span>
             </p>
+            <!-- CTA Button -->
             <div class="mt-12 flex justify-center gap-4">
                 <button onclick="scrollToSection('topic')" class="px-8 py-4 bg-white text-stone-900 rounded-full font-bold hover:bg-rose-600 hover:text-white transition-all shadow-lg hover:shadow-xl hover:shadow-rose-900/50 transform hover:-translate-y-1 border border-transparent hover:border-rose-500">
                     기획서 열람하기
                 </button>
             </div>
         </div>
-        <!-- Ambient Background -->
+        <!-- Ambient Background (Adjusted for Dark Mode) -->
         <div class="absolute top-0 left-0 w-full h-full z-0 pointer-events-none">
+            <!-- Red glow top left -->
             <div class="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-red-600/20 rounded-full blur-[100px] mix-blend-screen animate-pulse"></div>
+            <!-- Darker Rose glow bottom right -->
             <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-rose-900/30 rounded-full blur-[100px] mix-blend-screen" style="animation-delay: 1s;"></div>
         </div>
     </section>
@@ -202,6 +206,8 @@
                 <span class="text-rose-600 font-bold tracking-widest text-xs uppercase mb-2 block">Reason for Selection</span>
                 <h2 class="text-3xl font-bold text-stone-900 mb-4 serif">왜 '청년'과 '부마'인가?</h2>
             </div>
+
+            <!-- One Sentence Description Block -->
             <div class="bg-rose-50 border-l-4 border-rose-500 p-8 rounded-r-xl mb-12 shadow-sm text-left mx-auto max-w-4xl relative overflow-hidden group">
                 <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                     <i class="fas fa-quote-right text-8xl text-rose-900"></i>
@@ -213,7 +219,11 @@
                     <strong>영상과 스토리북이라는 시각적 결과물</strong>로 구체화하여 제시하는 프로젝트입니다.
                 </p>
             </div>
-            <div class="text-center mb-6"><p class="text-stone-500 text-sm">아래 항목을 클릭하여 주제 선정의 4가지 핵심 이유를 확인하세요.</p></div>
+            
+            <div class="text-center mb-6">
+                <p class="text-stone-500 text-sm">아래 항목을 클릭하여 주제 선정의 4가지 핵심 이유를 확인하세요.</p>
+            </div>
+
             <div class="space-y-4">
                 <!-- Item 1 -->
                 <div class="border border-stone-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
@@ -229,6 +239,7 @@
                         <p class="leading-relaxed">부산대학교는 1979년 부마민주항쟁의 시발점으로서, 청년 지식인이 사회 변화의 주체로 등장한 역사적 공간입니다. 과거를 단순히 재현하는 것이 아니라, 대학이 형성해 온 '공공성과 사회적 책임'이라는 정체성이 오늘날 청년에게 어떻게 이어질 수 있는지 탐구합니다.</p>
                     </div>
                 </div>
+
                 <!-- Item 2 -->
                 <div class="border border-stone-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                     <button class="w-full flex justify-between items-center p-6 bg-white hover:bg-stone-50 transition-colors text-left" onclick="toggleAccordion('topic-2')">
@@ -243,6 +254,7 @@
                         <p class="leading-relaxed">오늘날 미디어는 청년을 무기력, 상실, 분노의 대상으로만 소비합니다. 본 프로젝트는 청년을 '해석되어야 할 존재'가 아니라, 스스로 선택하고 미래를 만들어가는 '주체'로 재조명합니다.</p>
                     </div>
                 </div>
+
                 <!-- Item 3 -->
                 <div class="border border-stone-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                     <button class="w-full flex justify-between items-center p-6 bg-white hover:bg-stone-50 transition-colors text-left" onclick="toggleAccordion('topic-3')">
@@ -257,6 +269,7 @@
                         <p class="leading-relaxed">현대 청년층의 키워드는 '사회 참여'보다 '개인적 생존'에 집중되어 있습니다. 과거 부마항쟁 청년들의 사회적 책임감이 오늘날 어떻게 변모했는지 분석하고, 청년을 미래를 설계하는 주인공으로 세우고자 합니다.</p>
                     </div>
                 </div>
+
                 <!-- Item 4 -->
                 <div class="border border-stone-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                     <button class="w-full flex justify-between items-center p-6 bg-white hover:bg-stone-50 transition-colors text-left" onclick="toggleAccordion('topic-4')">
@@ -284,7 +297,7 @@
                 <p class="text-stone-500 mt-4">카드를 마우스로 가리켜 숨겨진 질문의 의미를 확인하세요.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Cards Omitted for Brevity (Same as before) -->
+                <!-- Question 1: History -->
                 <div class="flip-card cursor-pointer">
                     <div class="flip-card-inner">
                         <div class="flip-card-front shadow-lg">
@@ -296,6 +309,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- Question 2: Present -->
                 <div class="flip-card cursor-pointer">
                     <div class="flip-card-inner">
                         <div class="flip-card-front shadow-lg">
@@ -307,6 +321,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- Question 3: Future -->
                 <div class="flip-card cursor-pointer">
                     <div class="flip-card-inner">
                         <div class="flip-card-front shadow-lg">
@@ -318,6 +333,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- Question 4: Audience -->
                 <div class="flip-card cursor-pointer">
                     <div class="flip-card-inner">
                         <div class="flip-card-front shadow-lg">
@@ -515,7 +531,7 @@
         </div>
     </section>
 
-    <!-- Team Section -->
+    <!-- Team Section (Updated with Detailed Roles - Park Jin-sol Scenario Role Removed) -->
     <section id="team" class="py-24 bg-white border-t border-stone-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
@@ -527,36 +543,48 @@
                 <div class="bg-stone-50 p-8 rounded-2xl border border-stone-200 hover:shadow-md transition-shadow">
                     <div class="flex items-center mb-6 border-b border-stone-200 pb-4">
                         <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-2xl mr-4 shrink-0 font-serif">문</div>
-                        <div><h3 class="font-bold text-xl text-stone-900">문지수</h3><p class="text-xs text-stone-500 uppercase tracking-wide">PM & Analyst</p></div>
+                        <div>
+                            <h3 class="font-bold text-xl text-stone-900">문지수</h3>
+                            <p class="text-xs text-stone-500 uppercase tracking-wide">PM & Analyst</p>
+                        </div>
                     </div>
                     <ul class="text-sm text-stone-600 space-y-3">
                         <li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">●</span><span><strong>프로젝트 총괄:</strong> 데이터 기반 전략 수립</span></li>
                         <li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">●</span><span><strong>데이터 마이닝:</strong> 뉴스/학보 키워드 크롤링</span></li>
-                        <li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">●</span><span><strong>통계 분석:</strong> Python 빈도 분석 및 시각화</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">●</span><span><strong>통계 분석:</strong> Python 빈도/상관관계 분석 및 인사이트 시각화</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 mr-2 mt-1">●</span><span><strong>웹사이트 제작:</strong> 최종 결과물 웹 구현 및 배포</span></li>
                     </ul>
                 </div>
                 <!-- Member 2 -->
                 <div class="bg-stone-50 p-8 rounded-2xl border border-stone-200 hover:shadow-md transition-shadow">
                     <div class="flex items-center mb-6 border-b border-stone-200 pb-4">
                         <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center font-bold text-2xl mr-4 shrink-0 font-serif">박</div>
-                        <div><h3 class="font-bold text-xl text-stone-900">박진솔</h3><p class="text-xs text-stone-500 uppercase tracking-wide">Researcher</p></div>
+                        <div>
+                            <h3 class="font-bold text-xl text-stone-900">박진솔</h3>
+                            <p class="text-xs text-stone-500 uppercase tracking-wide">Researcher</p>
+                        </div>
                     </div>
                     <ul class="text-sm text-stone-600 space-y-3">
-                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>인문학적 분석:</strong> 역사적 맥락 해석</span></li>
-                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>스토리텔링:</strong> 데이터의 서사화</span></li>
-                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>시나리오:</strong> 영상/스토리북 스크립트 작성</span></li>
+                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>인문학적 분석:</strong> 역사적 맥락 해석 및 비교 인문학 연구</span></li>
+                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>스토리텔링:</strong> 데이터 키워드를 감동적인 내러티브로 변환</span></li>
+                        <!-- Removed Scenario Writing Role -->
+                        <li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">●</span><span><strong>철학적 제언:</strong> '왜 지금 다시 열정인가?'에 대한 화두 도출</span></li>
                     </ul>
                 </div>
                 <!-- Member 3 -->
                 <div class="bg-stone-50 p-8 rounded-2xl border border-stone-200 hover:shadow-md transition-shadow">
                     <div class="flex items-center mb-6 border-b border-stone-200 pb-4">
                         <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center font-bold text-2xl mr-4 shrink-0 font-serif">김</div>
-                        <div><h3 class="font-bold text-xl text-stone-900">김이진</h3><p class="text-xs text-stone-500 uppercase tracking-wide">Visual Director</p></div>
+                        <div>
+                            <h3 class="font-bold text-xl text-stone-900">김이진</h3>
+                            <p class="text-xs text-stone-500 uppercase tracking-wide">Visual Director</p>
+                        </div>
                     </div>
                     <ul class="text-sm text-stone-600 space-y-3">
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>AI 아트 디렉팅:</strong> 프롬프트 엔지니어링</span></li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>시각적 은유:</strong> 추상적 개념 시각화</span></li>
-                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>디자인 총괄:</strong> 프로젝트 톤앤매너 설정</span></li>
+                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>기획안 작성:</strong> 콘텐츠 구체화 및 설정</span></li>
+                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>AI 아트 디렉팅:</strong> 프롬프트 엔지니어링 및 스타일 최적화</span></li>
+                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>영상/편집:</strong> 생성 소스를 활용한 몰입형 스토리북 제작</span></li>
+                        <li class="flex items-start"><span class="text-purple-500 mr-2 mt-1">●</span><span><strong>디자인 총괄:</strong> 전체 프로젝트의 톤앤매너 설정</span></li>
                     </ul>
                 </div>
             </div>
@@ -567,6 +595,7 @@
     <footer class="bg-stone-900 text-stone-400 py-16">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h3 class="font-bold text-white text-xl mb-4 serif">응답하라 1979</h3>
+            <p class="text-sm mb-8 text-stone-500">1979 부마의 불꽃에서 2026 청년의 미래를 찾다</p>
             <div class="border-t border-stone-800 pt-8 text-xs text-stone-600">&copy; 2026 Team Reply 1979. All Rights Reserved.</div>
         </div>
     </footer>
